@@ -6,7 +6,7 @@ The Shell Library Component Framework (SLCF) are a set of libraries simplifying 
 
 ### Prerequisites
 
-Installation can be handled via the ```server_setup.sh``` file in the bci-testing git repository.  This will design the necessary environment.
+[TBD]
 
 ## Running Tests
 
