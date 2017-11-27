@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<base>
+   <level1>
+      <field1>${scriptdir}</field1>
+	   <field2 attribute1="windows">
+	      <subfield1>\\\\fileshare.dev.fco\\Users\\mklusman\\SECURED_HUB-ROBOT_DAILY_BITS</subfield1>
+   	   <subfield2>W:\\SECURED_HUB-ROBOT_DAILY_BITS</subfield2>
+	   </field2>
+   </level1>
+   <level2>
+      <field1>
+	      <subfield1>http://teamcity.dev.fco:8111</subfield1>
+	      <subfield2>
+	         <subsubfield1>develop/bus_2015q4</subsubfield1>
+	         <subsubfield2>
+	            <subsubfield2entry attribute1="1" attribute2="2">
+	               <listentry>A</listentry>
+	            </subsubfield2entry>
+	         </subsubfield2>
+	         <subsubfield2>
+	            <subsubfield6entry attribute1="1" attribute2="7">
+	               <listentry>B</listentry>
+	            </subsubfield6entry>
+	         </subsubfield2>
+	         <subsubfield3>
+	            <subsubfield3entry attribute1="3" attribute2="4">
+	               <listentry attribute1="1">AA</listentry>
+	               <listentry attribute1="2">BB</listentry>
+		            <listentry attribute1="3">CC</listentry>
+		            <listentry attribute1="4">DD</listentry>
+	            </subsubfield3entry>
+	         </subsubfield3>
+         </subfield2>
+      </field1>
+   </level2>
+</base>

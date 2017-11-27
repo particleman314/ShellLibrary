@@ -1,0 +1,2 @@
+suitedir: ${SLCF_SHELL_TOP}/test/language_pack
+suiteid: language_pack

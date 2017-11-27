@@ -1,0 +1,118 @@
+#!/bin/sh
+
+###############################################################################
+# Copyright (c) 2016 CA.  All rights reserved.
+# CA.
+# CA IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A
+# COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS
+# ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR
+# STANDARD, CA IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION
+# IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE
+# FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION.
+# CA EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO
+# THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO
+# ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE
+# FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS FOR A PARTICULAR PURPOSE.
+###############################################################################
+
+if [ -z "${__YUM_INSTALLER}" ]
+then
+  which yum >/dev/null 2>&1
+  [ $? -eq 0 ] && __YUM_INSTALLER=$( which 'yum' 2>/dev/null )
+
+  if [ -n "${__YUM_INSTALLER}" ]
+  then
+    ${__YUM_INSTALLER} -y info yum-utils >/dev/null 2>&1
+    [ $? -ne 0 ] && ${__YUM_INSTALLER} -y install yum-utils >/dev/null 2>&1
+  fi
+
+  YUM_NOT_INSTALLED=1
+  NO_RPM_NAME=2
+fi
+
+check_package()
+{
+  typeset rpmname="$1"
+
+  [ -z "${rpmname}" ] && return "${NO_RPM_NAME}"
+  [ -z "${__YUM_INSTALLER}" ] && return "${YUM_NOT_INSTALLED}"
+
+  ${__YUM_INSTALLER} -y list "${rpmname}"
+  return $?
+}
+
+dependent_package()
+{
+  typeset rpmname="$1"
+
+  [ -z "${rpmname}" ] && return "${NO_RPM_NAME}"
+  [ -z "${__YUM_INSTALLER}" ] && return "${YUM_NOT_INSTALLED}"
+
+  ${__YUM_INSTALLER} -y deplist "${rpmname}"
+  return $?
+}
+
+download_package()
+{
+  typeset rpmname="$1"
+  shift
+
+  [ -z "${rpmname}" ] && return "${NO_RPM_NAME}"
+
+  typeset webaddr="$1"
+  shift
+
+  [ -z "${webaddr}" ] && return "${NO_WEBARCHIVE}"
+
+  typeset wget_exe=$( which wget >/dev/null 2>&1 )
+  [ $? -ne 0 ] && return "${NO_WGET_EXECUTABLE}"
+
+  wget --quiet --no-dns-cache $@ "${webaddr}"/"${rpmname}"
+}
+
+info_package()
+{
+  typeset rpmname="$1"
+
+  [ -z "${rpmname}" ] && return "${NO_RPM_NAME}"
+  [ -z "${__YUM_INSTALLER}" ] && return "${YUM_NOT_INSTALLED}"
+
+  ${__YUM_INSTALLER} -y info "${rpmname}"
+  return $?
+}
+
+install_local_package()
+{
+  typeset rpmname="$1"
+
+  [ -z "${rpmname}" ] && return "${NO_RPM_NAME}"
+  [ -z "${__YUM_INSTALLER}" ] && return "${YUM_NOT_INSTALLED}"
+ 
+  ${__YUM_INSTALLER} -y localinstall "${rpmname}"
+  return $?
+}
+
+install_remote_package()
+{
+  typeset rpmname="$1"
+
+  [ -z "${rpmname}" ] && return "${NO_RPM_NAME}"
+  [ -z "${__YUM_INSTALLER}" ] && return "${YUM_NOT_INSTALLED}"
+
+  ${__YUM_INSTALLER} -y install "${rpmname}"
+  return $?
+}
+
+remove_package()
+{
+  typeset rpmname="$1"
+
+  [ -z "${rpmname}" ] && return "${NO_RPM_NAME}"
+  [ -z "${__YUM_INSTALLER}" ] && return "${YUM_NOT_INSTALLED}"
+
+  ${__YUM_INSTALLER} -y autoremove "${rpmname}"
+  return $?
+}
+
+# -------------------------------------------------------------------

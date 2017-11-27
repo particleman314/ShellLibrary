@@ -1,0 +1,51 @@
+###############################################################################
+# Copyright (c) 2016 CA.  All rights reserved. 
+# CA. 
+# CA IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
+# ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
+# STANDARD, CA IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
+# FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
+# CA EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
+# ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
+# FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
+# AND FITNESS FOR A PARTICULAR PURPOSE. 
+###############################################################################
+
+# FileExtension Definitions
+# ------------------------------------
+semaphore_extension:sem
+logfile_extension:log
+mail_extension:mlf
+error_extension:err
+text_extension:txt
+resource_extension:rc
+perl_extension:pl
+python_extension:py
+shell_extension:sh
+batch_extension:bat
+
+# Semaphore Information
+# ------------------------------------
+start_semaphore:start_pkg
+end_semaphore:end_pkg
+failed_semaphore:failed_pkg
+
+# Defines
+# ------------------------------------
+PASS:0
+FAIL:254
+HELP:253
+
+YES:1
+NO:0
+
+log_marker_width:7
+maximum_logfile_lines:2000
+
+# Resource Information
+# ------------------------------------
+resource_dir:${SHELL_ROOT_DIR}/resources
+

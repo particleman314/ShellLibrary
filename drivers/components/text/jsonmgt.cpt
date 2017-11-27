@@ -1,0 +1,4 @@
+suitedir: ${SLCF_SHELL_TOP}/test/jsonmgt
+suiteid: jsonmgt
+suitedriver: ${SLCF_SHELL_TOP}/test/jsonmgt/test_jsonmgt.sh
+testsetupdriver: ${SLCF_SHELL_TOP}/test/jsonmgt/__setup_json.sh

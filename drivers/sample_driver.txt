@@ -1,0 +1,57 @@
+## ==================================================
+## ArgParsing Shell Library
+## ==================================================
+suitedir: ${SLCF_SHELL_TESTDIR}/argparsing
+suiteid: argparsing
+suitedriver: ${SLCF_SHELL_TESTDIR}/argparsing/test_argparsing.sh
+testname: contains_option.sh
+testname: remove_option.sh
+testname: remove_option.sh
+
+## ==================================================
+## Assertions Shell Library
+## ==================================================
+suitedir: ${SLCF_SHELL_TESTDIR}/assertions
+suiteid: assertions
+suitedriver: ${SLCF_SHELL_TESTDIR}/assertions/test_assertions.sh
+#testdeps: ${SLCF_SHELL_BINDIR}/drivers/dependency_listfile.txt
+#testdeps: assert_not_equals.sh --> assert_true.sh, assert_false.sh,assert_equals.sh | assert_equals.sh --> assert_true.sh
+
+## ==================================================
+## Base Logging Shell Library
+## ==================================================
+suitedir: ${SLCF_SHELL_TESTDIR}/base_logging
+suiteid: base_logging
+suitedriver: ${SLCF_SHELL_TESTDIR}/assertions/test_base_logging.sh
+
+## ===================================================
+## Time Management Shell Library
+## ===================================================
+suitedir: ${SLCF_SHELL_TESTDIR}/timemgt
+suitedriver: ${SLCF_SHELL_TESTDIR}/timemgt/test_timemgt.sh
+suiteid: timemgt
+testtags: library,sample
+
+## ===================================================
+## Numerics Shell Library
+## ===================================================
+suitedir: ${SLCF_SHELL_TESTDIR}/numerics
+suitedriver: ${SLCF_SHELL_TESTDIR}/numerics/test_numerics.sh
+suiteid: numerics
+suitelanguage: shell
+suitesubject: Shell Numeric Library
+testargs: -a 1
+testargs: --file %SLCF_SHELL_FUNCTIONDIR%/outputs/blah.txt
+testname: count_items.sh
+testargs: -b 2
+testtags: library,simple
+testname: decrement.sh
+
+## ===================================================
+## Wrapper Program Library
+## ===================================================
+suitedir: ${SLCF_SHELL_TESTDIR}/language_pack
+suiteid: language_pack
+suitesubject: Wrapper Library
+#testargs: -a 1 -b 2 -c Mine -d Yours
+#testname: broken_python_hello_world.py

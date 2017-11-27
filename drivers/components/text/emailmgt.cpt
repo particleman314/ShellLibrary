@@ -1,0 +1,3 @@
+suitedir: ${SLCF_SHELL_TOP}/test/emailmgt
+suiteid: emailmgt
+suitedriver: ${SLCF_SHELL_TOP}/test/emailmgt/test_emailmgt.sh

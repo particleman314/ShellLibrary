@@ -1,0 +1,15 @@
+## ===================================================
+## Numerics Shell Library
+## ===================================================
+suitedir: ${SLCF_SHELL_TESTDIR}/numerics
+suitedriver: ${SLCF_SHELL_TESTDIR}/numerics/test_numerics.sh
+suiteid: numerics
+suitelanguage: shell
+suitesubject: Shell Numeric Library
+testargs: -a 1
+testargs: --file %SLCF_SHELL_FUNCTIONDIR%/outputs/blah.txt
+testname: count_items.sh
+testargs: -b 2
+testtags: library,simple
+testname: decrement.sh
+

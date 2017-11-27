@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<test_selection>
+   <suites>
+      <suite suiteid="base_logging">
+         <suitedir>${SLCF_SHELL_TOP}/test/base_logging</suitedir>
+         <suitedriver relative="yes">test_base_logging.sh</suitedriver>
+      </suite>
+   </suites>
+</test_selection>

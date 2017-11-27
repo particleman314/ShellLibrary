@@ -1,0 +1,58 @@
+Oct  3 13:22:47:218 3 pu: SSL - init: mode=0, cipher=DEFAULT, context=OK
+Oct  3 13:22:47:219 2 pu: nimCharsetSet() - charset=
+======================================================
+Address: /db/db-2-sh01/db-2-sh01/hub Request: get_info
+======================================================
+hubname         PDS_PCH          10 db-2-sh01
+domain          PDS_PCH           3 db
+version         PDS_PCH          36 8.00 [Build 8.00.6219, Aug 26 2016]
+hubaddr         PDS_PCH          28 /db/db-2-sh01/db-2-sh01/hub
+hubip           PDS_PCH          14 10.238.41.245
+hubip_internal  PDS_PCH          10 127.0.0.1
+log_level       PDS_I             2 5
+log_file        PDS_PCH           8 hub.log
+license         PDS_I             2 1
+expire          PDS_I            11 1577948400
+ispool          PDS_PCH           4 yes
+tunnel          PDS_PCH           4 yes
+security_config_propagation PDS_PCH           4 yes
+encrypt_security_file PDS_PCH           3 no
+origin          PDS_PCH          10 db-2-sh01
+ldap            PDS_PCH           3 no
+ldap_version    PDS_PCH           5 1.22
+requests        PDS_I             8 2683033
+post_received   PDS_I             7 945488
+post_sent       PDS_I             4 123
+post_dropped    PDS_I             2 0
+sec_login_ok    PDS_I             6 28736
+sec_login_failed PDS_I             2 0
+sec_verify_ok   PDS_I             6 86485
+sec_verify_failed PDS_I             2 7
+sec_on          PDS_I             2 2
+sec_ver         PDS_I             4 186
+uptime          PDS_I             8 2868578
+started         PDS_I            11 1472654050
+lastrestart     PDS_I             2 0
+nrestarts       PDS_I             2 0
+nns_records     PDS_I             3 24
+r_nns_records   PDS_I             3 14
+iNameThreads    PDS_I             2 0
+sessions        PDS_PPDS        300
+ 0               PDS_PDS         141
+  address         PDS_PCH          16 127.0.0.1/53781
+  type            PDS_PCH           4 TCP
+  idle            PDS_I             2 0
+  established     PDS_PCH          21 13:23:48 03 Oct 2016
+  lastrequest     PDS_PCH          21 13:23:48 03 Oct 2016
+  state           PDS_I             2 2
+ 1               PDS_PDS         141
+  address         PDS_PCH          16 127.0.0.1/48002
+  type            PDS_PCH           4 TCP
+  idle            PDS_I             2 0
+  established     PDS_PCH          21 08:34:10 31 Aug 2016
+  lastrequest     PDS_PCH          21 13:23:48 03 Oct 2016
+  state           PDS_I             2 2
+spooler_capabilities PDS_PDS          77
+ per_queue_timeout PDS_I             2 1
+ temp_queue_heartbeat PDS_I             2 1
+ get_queue_heartbeat PDS_I             2 1

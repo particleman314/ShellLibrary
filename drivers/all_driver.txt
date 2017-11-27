@@ -1,0 +1,152 @@
+suitedir: ${SLCF_SHELL_TESTDIR}/argparsing
+suiteid: argparsing
+suitedriver: ${SLCF_SHELL_TESTDIR}/argparsing/test_argparsing.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/assertions
+suiteid: assertions
+suitedriver: ${SLCF_SHELL_TESTDIR}/assertions/test_assertions.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/base_logging
+suiteid: base_logging
+suitedriver: ${SLCF_SHELL_TESTDIR}/base_logging/test_base_logging.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/base_setup
+suiteid: base_setup
+suitedriver: ${SLCF_SHELL_TESTDIR}/base_setup/test_base_setup.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/compression
+#suiteid: compression
+#suitedriver: ${SLCF_SHELL_TESTDIR}/compression/test_compression.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/debugging
+suiteid: debugging
+suitedriver: ${SLCF_SHELL_TESTDIR}/debugging/test_debugging.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/emailmgt
+#suiteid: emailmgt
+#suitedriver: ${SLCF_SHELL_TESTDIR}/emailmgt/test_emailmgt.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/execaching
+suiteid: execaching
+suitedriver: ${SLCF_SHELL_TESTDIR}/execaching/test_execaching.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/file_assertions
+suiteid: file_assertions
+suitedriver: ${SLCF_SHELL_TESTDIR}/file_assertions/test_file_assertions.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/filemgt
+suiteid: filemgt
+suitedriver: ${SLCF_SHELL_TESTDIR}/filemgt/test_filemgt.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/hashmaps
+suiteid: hashmaps
+suitedriver: ${SLCF_SHELL_TESTDIR}/hashmaps/test_hashmaps.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/list
+suiteid: list
+suitedriver: ${SLCF_SHELL_TESTDIR}/list/test_list.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/queue
+suiteid: queue
+suitedriver: ${SLCF_SHELL_TESTDIR}/queue/test_queue.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/stack
+suiteid: stack
+suitedriver: ${SLCF_SHELL_TESTDIR}/stack/test_stack.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/inimgt
+#suiteid: inimgt
+#suitedriver: ${SLCF_SHELL_TESTDIR}/inimgt/test_inimgt.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/jsonmgt
+suiteid: jsonmgt
+suitedriver: ${SLCF_SHELL_TESTDIR}/jsonmgt/test_jsonmgt.sh
+testsetupdriver: ${SLCF_SHELL_TESTDIR}/jsonmgt/__setup_jsonmgt.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/logging
+suiteid: logging
+suitedriver: ${SLCF_SHELL_TESTDIR}/logging/test_logging.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/machinemgt
+#suiteid: machinemgt
+#suitedriver: ${SLCF_SHELL_TESTDIR}/machinemgt/test_machinemgt.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/network_assertions
+suiteid: network_assertions
+suitedriver: ${SLCF_SHELL_TESTDIR}/network_assertions/test_network_assertions.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/networkmgt
+#suiteid: networkmgt
+#suitedriver: ${SLCF_SHELL_TESTDIR}/networkmgt/test_networkmgt.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/newscriptgen
+suiteid: newscriptgen
+suitedriver: ${SLCF_SHELL_TESTDIR}/newscriptgen/test_newscriptgen.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/numerics
+suiteid: numerics
+suitedriver: ${SLCF_SHELL_TESTDIR}/numerics/test_numerics.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/paramfilemgt
+suiteid: paramfilemgt
+suitedriver: ${SLCF_SHELL_TESTDIR}/paramfilemgt/test_paramfilemgt.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/parammgt
+suiteid: parammgt
+suitedriver: ${SLCF_SHELL_TESTDIR}/parammgt/test_parammgt.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/passwordmgt
+suiteid: passwordmgt
+suitedriver: ${SLCF_SHELL_TESTDIR}/passwordmgt/test_passwordmgt.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/pkgmgt
+#suiteid: pkgmgt
+#suitedriver: ${SLCF_SHELL_TESTDIR}/pkgmgt/test_pkgmgt.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/processmgt
+#suiteid: processmgt
+#suitedriver: ${SLCF_SHELL_TESTDIR}/processmgt/test_processmgt.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/rest
+#suiteid: rest
+#suitedriver: ${SLCF_SHELL_TESTDIR}/rest/test_rest.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/stringmgt
+suiteid: stringmgt
+suitedriver: ${SLCF_SHELL_TESTDIR}/stringmgt/test_stringmgt.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/timemgt
+suiteid: timemgt
+suitedriver: ${SLCF_SHELL_TESTDIR}/timemgt/test_timemgt.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/nim
+#suiteid: nim
+#suitedriver: ${SLCF_SHELL_TESTDIR}/nim/test_nim.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/nim_assertions
+#suiteid: nim_assertions
+#suitedriver: ${SLCF_SHELL_TESTDIR}/nim_assertions/test_nim_assertions.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/nim_configuration
+#suiteid: nim_configuration
+#suitedriver: ${SLCF_SHELL_TESTDIR}/nim_configuration/test_nim_configuration.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/nim_pu
+#suiteid: nim_pu
+#suitedriver: ${SLCF_SHELL_TESTDIR}/nim_pu/test_nim_pu.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/vmware
+#suiteid: vmware
+#suitedriver: ${SLCF_SHELL_TESTDIR}/vmware/test_vmware.sh
+
+#suitedir: ${SLCF_SHELL_TESTDIR}/tap
+#suiteid: tap
+#suitedriver: ${SLCF_SHELL_TESTDIR}/tap/test_tap.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/xmlmgt
+suiteid: xmlmgt
+suitedriver: ${SLCF_SHELL_TESTDIR}/xmlmgt/test_xmlmgt.sh
+testsetupdriver: ${SLCF_SHELL_TESTDIR}/xmlmgt/__setup_xmlmgt.sh
+
+suitedir: ${SLCF_SHELL_TESTDIR}/language_pack
+suiteid: language_pack

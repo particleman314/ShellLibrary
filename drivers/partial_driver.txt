@@ -1,0 +1,6 @@
+@define MY_PATH="${SLCF_SHELL_TOP}"
+@define MY_DEFINE="Hello World"
+@include ${MY_PATH}/drivers/components/text/file_assertions.cpt
+@include ${MY_PATH}/drivers/components/text/argparsing.cpt
+@include ${MY_PATH}/drivers/components/text/debugging.cpt
+@include ${MY_PATH}/drivers/components/text/hashmaps.cpt

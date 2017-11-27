@@ -1,0 +1,3 @@
+suitedir: ${SLCF_SHELL_TOP}/test/networkmgt
+suiteid: networkmgt
+suitedriver: ${SLCF_SHELL_TOP}/test/networkmgt/test_networkmgt.sh

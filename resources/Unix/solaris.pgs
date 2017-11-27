@@ -1,0 +1,116 @@
+#!/bin/sh
+
+###############################################################################
+# Copyright (c) 2016 CA.  All rights reserved.
+# CA.
+# CA IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A
+# COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS
+# ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR
+# STANDARD, CA IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION
+# IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE
+# FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION.
+# CA EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO
+# THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO
+# ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE
+# FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS FOR A PARTICULAR PURPOSE.
+###############################################################################
+
+check_package()
+{
+  typeset pkgname="$1"
+  [ -z "${pkgname}" ] && return 1
+
+  typeset pkgchk_exe  
+  which pkgchk >/dev/null 2>&1
+
+  if [ $? -eq 0 ]
+  then
+    pkgchk_exe=$( which pkgchk 2>/dev/null )
+  else
+    return 1
+  fi
+
+  ${pkgchk_exe} -c "${pkgname}" >/dev/null 2>&1
+  [ $? -eq 0 ] && return 0 || return 1
+}
+
+dependent_packages()
+{
+  typeset pkgname="$1"
+  [ -z "${pkgname}" ] && return 1
+
+  typeset pkgdep_exe  
+  which pkgdep >/dev/null 2>&1
+
+  if [ $? -eq 0 ]
+  then
+    pkgdep_exe=$( which pkgdep 2>/dev/null )
+  else
+    return 1
+  fi
+
+  ${pkgdep_exe} "${pkgname}"
+  return 0
+}
+
+download_package()
+{
+
+}
+
+info_package()
+{
+  typeset pkgname="$1"
+
+  typeset pkginfo_exe
+  which pkginfo >/dev/null 2>&1
+
+  if [ $? -eq 0 ]
+  then
+    pkginfo_exe=$( which pkginfo 2>/dev/null )
+  else
+    return 1
+  fi
+
+  typeset information
+  if [ -z "${pkgname}" ]
+  then
+    information=$( ${pkginfo_exe} 2>/dev/null )
+  else
+    information=$( ${pkginfo_exe} -l "${pkgname}" 2>/dev/null )
+  fi
+  printf "%s\n" "${information}"
+  return 0
+}
+
+install_local_package()
+{
+
+}
+
+install_remote_package()
+{
+
+}
+
+remove_package()
+{
+  typeset pkgname="$1"
+  [ -z "${pkgname}" ] && return 1
+
+  typeset pkgrm_exe
+  which pkgrm >/dev/null 2>&1
+
+  if [ $? -eq 0 ]
+  then
+    pkgrm_exe=$( which pkgrm 2>/dev/null )
+  else
+    return 1
+  fi
+
+  ${pkgrm_exe} "${pkgname}" 2>/dev/null )
+  return 0
+}
+
+# -------------------------------------------------------------------

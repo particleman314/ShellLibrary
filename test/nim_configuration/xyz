@@ -1,0 +1,16 @@
+<abc>
+      <1>
+        cert = test.pem
+      </1>
+</abc>
+<hub>
+  key1 = 1
+  key2 = 2
+  <environment>
+    LD_LIBRARY_PATH = .
+  </environment>
+  <tunnel>
+    server = yes
+    timeout = 500
+  </tunnel>
+</hub>

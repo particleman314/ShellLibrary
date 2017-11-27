@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<test_selection>
+   <defines>
+      <define key="BLAH" value="BLEH"></define>
+   </defines>
+   <includes directory="${SLCF_SHELL_TOP}/drivers/components/xml">
+      <include>debugging.cpt.xml</include>
+      <include directory="${SLCF_SHELL_TOP}/drivers/components/other">argparsing.cpt.xml</include>
+   </includes>
+   <suites>
+      <suite suiteid="argparsing">
+         <suitedir>${SLCF_SHELL_TOP}/test/argparsing</suitedir>
+         <suitedriver>${SLCF_SHELL_TOP}/test/argparsing/test_argparsing.sh</suitedriver>
+         <suitedriverarguments>
+            <suitedriverargument>--example</suitedriverargument>
+            <suitedriverargument>-o</suitedriverargument>
+            <suitedriverargument>--arg</suitedriverargument>
+         </suitedriverarguments>
+         <suitesubject>Argument Management</suitesubject>
+         <suitetests>
+            <suitetest testname="contains_option.sh"></suitetest>
+            <suitetest testname="remove_option.sh" multi_input="1">
+               <testinputsets>
+                  <testinputset id="1">
+                     <testarguments>
+                        <testargument>-p</testargument>
+                     </testarguments>
+                  </testinputset>
+                  <testinputset id="2">
+                     <testarguments>
+                        <testargument>-f</testargument>
+                     </testarguments>
+                     <testresult>eq 1</testresult>
+                  </testinputset>
+               </testinputsets>
+            </suitetest>
+         </suitetests>
+      </suite>
+      <suite suiteid="base_setup">
+         <suitedir>${SLCF_SHELL_TOP}/test/base_setup</suitedir>
+         <suitedriver>${SLCF_SHELL_TOP}/test/base_setup/test_base_setup.sh</suitedriver>
+         <suitetests>
+            <suitetest testname="progress_bar.sh"></suitetest>
+         </suitetests>
+      </suite>
+      <suite suiteid="assertions">
+         <suitedir>${SLCF_SHELL_TOP}/test/assertions</suitedir>
+         <suitedriver>${SLCF_SHELL_TOP}/test/base_setup/test_assertions.sh</suitedriver>
+         <suitetests>
+            <suitetest testname="assert.sh"></suitetest>
+            <suitetest testname="assert_not_empty.sh"></suitetest>
+         </suitetests>
+      </suite>
+      <suite suiteid="timemgt">
+         <suitesubject>Time Library</suitesubject>
+         <suitedir>${SLCF_SHELL_TOP}/test/timemgt</suitedir>
+         <suitedriver>${SLCF_SHELL_TOP}/test/timemgt/test_timemgt.sh</suitedriver>
+         <suitetags>
+            <suitetag>library</suitetag>
+            <suitetag>sample</suitetag>
+         </suitetags>
+      </suite>
+      <suite suiteid="numerics">
+         <suitesubject>Numeric Library</suitesubject>
+         <suitedir>${SLCF_SHELL_TOP}/test/numerics</suitedir>
+         <suitedriver>${SLCF_SHELL_TOP}/test/numerics/test_numerics.sh</suitedriver>
+         <suitelanguage>shell</suitelanguage>
+         <suitetests>
+            <suitetest testname="count_items.sh">
+               <testarguments>
+                  <testargument>-a 1</testargument>
+                  <testargument>--file %SLCF_SHELL_TOP%/lib/outputs/blah.txt</testargument>
+               </testarguments>
+               <testresult>eq 0</testresult>
+            </suitetest>
+            <suitetest testname="decrement.sh">
+               <testarguments>
+                  <testargument>-b 2</testargument>
+               </testarguments>
+            </suitetest>
+         </suitetests>
+      </suite>
+      <suite>
+         <suiteid>language_pack</suiteid>
+         <suitesubject>Wrapper Library</suitesubject>
+         <suitedir>${SLCF_SHELL_TOP}/test/language_pack</suitedir>
+         <suitetests>
+            <suitetest testname="python_hello_world.py">
+               <testdriver>ABC</testdriver>
+               <testarguments>
+                  <testargument>-a 1 -b 2 -c Mine -d Yours</testargument>
+               </testarguments>
+               <testtags>
+                  <testtag>python</testtag>
+               </testtags>
+               <testresult>eq 3</testresult>
+            </suitetest>
+         </suitetests>
+      </suite>
+   </suites>
+</test_selection>

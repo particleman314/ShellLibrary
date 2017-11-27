@@ -1,0 +1,169 @@
+{
+  "testdir": [
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/argparsing",
+      "id": "argparsing",
+      "subject": "Argument_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/base_setup",
+      "id": "base_setup",
+      "subject": "Basic_Function_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/assertions",
+      "id": "assertions",
+      "subject": "Assertions_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/base_logging",
+      "id": "base_loggin",
+      "subject": "Basic_Logging_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/base_machinemgt",
+      "id": "base_machinemgt",
+      "subject": "Basic_Machine_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/compression",
+      "id": "compression",
+      "subject": "Compression_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/debugging",
+      "id": "debugging",
+      "subject": "Debug_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/emailmgt",
+      "id": "emailmgt",
+      "subject": "Email_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/execaching",
+      "id": "execaching",
+      "subject": "Executable_Caching_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/file_assestions",
+      "id": "file_assertions",
+      "subject": "File_Assertions_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/filemgt",
+      "id": "filemgt",
+      "subject": "File_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/hashmaps",
+      "id": "hashmaps",
+      "subject": "Hashmap_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/inimgt",
+      "id": "inimgt",
+      "subject": "INI_File_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/jsonmgt",
+      "id": "jsonmgt",
+      "subject": "JSON_File_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/logging",
+      "id": "logging",
+      "subject": "Logging_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/machinemgt",
+      "id": "machinemgt",
+      "subject": "Machine_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/network_assertions",
+      "id": "network_assertions",
+      "subject": "Network_Assertions_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/numerics",
+      "id": "numerics",
+      "subject": "Numerics_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/paramfilemgt",
+      "id": "paramfilemgt",
+      "subject": "Parameter_File_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/parammgt",
+      "id": "parammgt",
+      "subject": "Parameter_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/passwordmgt",
+      "id": "passwordmgt",
+      "subject": "Password_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/pkgmgt",
+      "id": "pkgmgt",
+      "subject": "Package_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/processmgt",
+      "id": "processmgt",
+      "subject": "Process_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/rest",
+      "id": "rest",
+      "subject": "REST_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/stringmgt",
+      "id": "stringmgt",
+      "subject": "String_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/timemgt",
+      "id": "timemgt",
+      "subject": "Time_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/xmlmgt",
+      "id": "xmlmgt",
+      "subject": "XML_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/nim",
+      "id": "nim",
+      "subject": "NIM_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/nim_assertions",
+      "id": "nim_assertions",
+      "subject": "NIM_Assertions_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/nim_configuration",
+      "id": "nim_configuration",
+      "subject": "NIM_Configuration_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/nim_pu",
+      "id": "nim_pu",
+      "subject": "NIM_Pu_Management_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/tap",
+      "id": "tap",
+      "subject": "TAP_Library",
+    },
+    {
+      "path": "${SLCF_SHELL_TESTDIR}/queue",
+      "id": "queue",
+      "subject": "Queue Library"
+    }
+  ]
+}

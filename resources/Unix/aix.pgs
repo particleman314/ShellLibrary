@@ -1,0 +1,91 @@
+#!/bin/sh
+
+###############################################################################
+# Copyright (c) 2016-{{{YEAR}}} CA.  All rights reserved.
+# CA.
+# CA IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A
+# COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS
+# ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR
+# STANDARD, CA IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION
+# IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE
+# FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION.
+# CA EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO
+# THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO
+# ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE
+# FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY
+# AND FITNESS FOR A PARTICULAR PURPOSE.
+###############################################################################
+
+check_package()
+{
+
+}
+
+dependent_packages()
+{
+
+}
+
+download_package()
+{
+
+}
+
+info_package()
+{
+  typeset filesetname="$1"
+  typeset lslpp_exe
+
+  # lslpp -f <fileset> ------> list files in <fileset> package
+  # lslpp -p <fileset> ------> list pre-req for <fileset> package
+
+  which lslpp >/dev/null 2>&1
+
+  if [ $? -eq 0 ]
+  then
+    lslpp_exe=$( which lslpp 2>/dev/null )
+  else
+    return 1
+  fi
+
+  typeset information
+  if [ -z "${filesetname}" ]
+  then
+    information=$( ${lslpp_exe} 2>/dev/null )
+  else
+    information=$( ${lslpp_exe} -l "${filesetname}" 2>/dev/null )
+  fi
+  printf "%s\n" "${information}"
+  return 0
+}
+
+install_local_package()
+{
+  typeset filesetname="$1"
+  [ -z "${filesetname}" ] && return 1
+
+  typeset installp_exe
+
+  which installp >/dev/null 2>&1
+
+  if [ $? -eq 0 ]
+  then
+    installp_exe=$( which installp 2>/dev/null )
+  else
+    return 1
+  fi
+
+  return 0
+}
+
+install_remote_package()
+{
+
+}
+
+remove_package()
+{
+
+}
+
+# -------------------------------------------------------------------

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<test_selection>
+   <suites>
+      <suite suiteid="hashmaps">
+         <suitedir>${SLCF_SHELL_TOP}/test/hashmaps</suitedir>
+         <suitedriver relative="yes">test_hashmaps.sh</suitedriver>
+      </suite>
+   </suites>
+</test_selection>

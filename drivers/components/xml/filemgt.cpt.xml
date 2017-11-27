@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<test_selection>
+   <suites>
+      <suite suiteid="filemgt">
+         <suitedir>${SLCF_SHELL_TOP}/test/filemgt</suitedir>
+         <suitedriver relative="yes">test_filemgt.sh</suitedriver>
+      </suite>
+   </suites>
+</test_selection>

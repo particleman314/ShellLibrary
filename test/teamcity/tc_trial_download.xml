@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<teamcity>
+   <storage_area>
+      <local></local>
+      <remote OS="windows">
+         <fileshare>//fileshare.dev.fco/Users/mklusman/SECURED_HUB_ROBOT_DAILY_BITS</fileshare>
+      </remote>
+      <remote OS="linux">
+         <fileshare>/mnt/fileshare/Users/mklusman/SECURED_HUB_ROBOT_DAILY_BITS</fileshare>
+      </remote>
+      <keep_limit>10</keep_limit>
+   </storage_area>
+   <build_server>
+      <http_address>http://teamcity.dev.fco:8111</http_address>
+      <username>klumi01</username>
+      <password>ENC{{{SGF3YWlpMjAxOAo=}}}</password>
+      <tag_marker>.lastFinished</tag_marker>
+      <projects>
+         <project probe="hub" compile_style="cmake">
+            <name>CMake_Bci_Hub_Package</name>
+            <branches>
+               <branch name="develop/bus_ape">
+                  <contents has_debug="1">
+                     <content>hub</content>
+                  </contents>
+                  <content_path>httpAuth/repository/downloadAll</content_path>
+                  <downloadfile>hub_complete.zip</downloadfile>
+               </branch>
+               <branch name="develop/bus_bat">
+                  <contents has_debug="1">
+                     <content>hub_adapter</content>
+                     <content>hub</content>
+                  </contents>
+                  <content_path>httpAuth/repository/downloadAll</content_path>
+                  <downloadfile>hub_complete.zip</downloadfile>
+               </branch>
+               <branch name="develop/bus_cat">
+                  <contents has_debug="1">
+                     <content>hub_adapter</content>
+                     <content>hub</content>
+                  </contents>
+                  <content_path>httpAuth/repository/downloadAll</content_path>
+                  <downloadfile>hub_complete.zip</downloadfile>
+                  <description>FIPS enabled hub branch</description>
+               </branch>
+               <branch name="develop/feature/US56935_sql_response_fb1">
+                  <contents has_debug="1">
+                     <content>hub_adapter</content>
+                     <content>hub</content>
+                  </contents>
+                  <content_path>httpAuth/repository/downloadAll</content_path>
+                  <downloadfile>hub_complete.zip</downloadfile>
+                  <description>Trial Download</description>
+               </branch>
+               <branch name="develop/feature/US56935_sql_response_fb1">
+                  <contents has_debug="1">
+                     <content>hub_adapter</content>
+                     <content>hub</content>
+                  </contents>
+                  <content_path>httpAuth/repository/downloadAll</content_path>
+                  <downloadfile>hub_complete.zip</downloadfile>
+                  <description>Trial Download</description> 
+               </branch>
+            </branches>
+         </project>
+         <project probe="robot" compile_style="cmake">
+            <name>CMake_Bci_Robot_Package</name>
+            <branches>
+               <branch name="develop/bus_ape">
+                  <contents has_debug="1">
+                     <content>robot_update</content>
+                  </contents>
+                  <content_path>httpAuth/repository/downloadAll</content_path>
+                  <downloadfile>robot_complete.zip</downloadfile>
+               </branch>
+               <branch name="develop/bus_bat">
+                  <contents has_debug="1">
+                     <content>robot_update</content>
+                  </contents>
+                  <content_path>httpAuth/repository/downloadAll</content_path>
+                  <downloadfile>robot_complete.zip</downloadfile>
+               </branch>
+               <branch name="develop/feature/US56935_sql_response_fb1">
+                  <contents has_debug="1">
+                     <content>robot_update</content>
+                  </contents>
+                  <content_path>httpAuth/repository/downloadAll</content_path>
+                  <downloadfile>robot_complete.zip</downloadfile>
+                  <description>Trial Download</description>
+               </branch>
+            </branches>
+         </project>
+      </projects>
+   </build_server>
+   <security>
+      <certificates>
+         <host>10.238.40.230</host>
+         <username>root</username>
+         <password>ENC{{{dDNzdGk5Cg==}}}</password>
+      </certificates>
+      <licenses>
+         <nimsoft>
+            <probe name="hub_adapter">hub_adapter/CA/*/1/1-jan-2018/BOW FLEW HARM RAT BELL BUSY </probe>
+         </nimsoft>
+      </licenses>
+   </security>
+</teamcity>

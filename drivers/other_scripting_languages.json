@@ -1,0 +1,11 @@
+{
+  "testdir": [
+    {
+      "suitepath": "${SLCF_SHELL_TESTDIR}/language_pack",
+      "suiteid": "langauge_pack",
+      "suitesubject": "Wrapper_Library",
+      "suitelanguage": "python",
+      "tests": [ "python_sample.py" ]
+    }
+  ]
+}

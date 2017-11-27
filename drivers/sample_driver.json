@@ -1,0 +1,53 @@
+{
+  "suitedir": [
+    {
+      "suitepath": "${SLCF_SHELL_TESTDIR}/argparsing",
+      "suiteid": "argparsing",
+      "suitedriver": "${SLCF_SHELL_TESTDIR}/argparsing/test_argparsing.sh",
+      "suitesubject": "Argument Management",
+      "suitetests": [
+        {
+          "contains_option.sh": {},
+          "remove_option.sh": {}
+        }
+      ]
+    },
+    {
+      "suitepath": "${SLCF_SHELL_TESTDIR}/base_setup",
+      "suiteid": "base_setup",
+      "suitedriver": "${SLCF_SHELL_TESTDIR}/base_setup/test_base_setup",
+      "suitetests": [
+        {
+          "progress_bar.sh": {
+            "testdependencies": [ "sleep.sh", "spinner.sh" ],
+            "testarguments": [ "-a 1", "--file blah.txt", "-b 2 -c 56" ]
+          },
+          "timer.sh": {}
+        }
+      ]
+    },
+    {
+      "suitepath": "${SLCF_SHELL_TESTDIR}/numerics",
+      "suiteid": "numerics",
+      "suitedriver": "${SLCF_SHELL_TESTDIR}/numerics/test_numerics.sh",
+      "suitesubject": "Numeric Library",
+      "suitetags": [ "library", "sample" ]
+    },
+    {
+      "suitepath": "${SLCF_SHELL_TESTDIR}/language_pack",
+      "suiteid": "language_pack",
+      "suitesubject": "Wrapper Library",
+      "suitelanguage": "python",
+      "suitetests": [
+        {
+          "python_sample.py": {
+            "testdriver": "ABC",
+            "testarguments": [ "-B 6" ],
+            "testresult": "eq 10",
+            "testtags": [ "python" ]
+          }
+        }
+      ]
+    }
+  ]
+}

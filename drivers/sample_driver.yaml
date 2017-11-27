@@ -1,0 +1,35 @@
+---
+suitedir:
+- suitepath: "${SLCF_SHELL_TESTDIR}/argparsing"
+  suiteid: argparsing
+  suitesubject: "Argument Management"
+  suitedriver: "${SLCF_SHELL_TESTDIR}/argparsing/test_argparsing"
+  suitetests:
+  - contains_option
+  - remove_option
+  
+- suitepath: "${SLCF_SHELL_TESTDIR}/base_setup"
+  suiteid: base_setup
+  suitedriver: "${SLCF_SHELL_TESTDIR}/base_setup/test_base_setup"
+  suitetests:
+  - progress_bar:
+    - testarguments: -b 5
+  
+- suitepath: "${SLCF_SHELL_TESTDIR}/numerics"
+  suiteid: numerics
+  suitedriver: "${SLCF_SHELL_TESTDIR}/numerics/test_numerics.sh"
+  suitesubject: "Numeric Library"
+  suitetags:
+  - sample
+  - library
+
+- suitepath: "${SLCF_SHELL_TESTDIR}/language_pack"
+  suiteid: language_pack
+  suitesubject: "Wrapper Library"
+  suitelanguage: python
+  suitetests:
+  - python_sample.py:
+    - testdriver: ABC
+      testarguments: "-B 6"
+      testresult: "eq 8"
+      testtags: python
