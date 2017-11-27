@@ -54,15 +54,6 @@ The current list of library components are...
 * vmware -- [ UNDER CONSTRUCTION ]
 * xmlmgt -- requires xmlstarlet executable to be used
 
-### Specialty Libraries for CA
-
-* nim
-* nim_assertions
-* nim_bus
-* nim_configuration
-* nim_pu
-* nim_probe
-
 ### Specialty Libraries for TAP
 
 * tap
@@ -73,7 +64,7 @@ Please read [CONTRIBUTING](CONTRIBUTING.md) for details on code of conduct and t
 
 ## Versioning
 
-Current Version is 1.69
+Current Version is 1.70
 
 ## Authors
 
@@ -81,6 +72,6 @@ Current Version is 1.69
 
 ## License
 
-This project is licensed under CA
+This project is licensed under MIT License
 
 ## Acknowledgments
