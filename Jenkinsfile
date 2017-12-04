@@ -9,6 +9,10 @@ pipeline {
 echo "I\'m inside"'''
         }
         
+        dir(path: '${WORKSPACE}') {
+          sh 'ls -la'
+        }
+        
       }
     }
   }
