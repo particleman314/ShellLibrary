@@ -1,13 +1,14 @@
 pipeline {
   agent any
   stages {
-    stage('Initial') {
+    stage('DirCreation') {
       steps {
-        sh '''echo "This is the first stage"
-
-find . -type f -name "test*.sh" > "${OUTPUTFILE}"
-
-cat "${OUTPUTFILE}"'''
+        pwd(tmp: true)
+        dir(path: './sampleDirectory') {
+          sh '''pwd
+echo "I\'m inside"'''
+        }
+        
       }
     }
   }
