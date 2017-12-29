@@ -1,23 +1,12 @@
 pipeline {
-  agent any
-  stages {
-    stage('DirCreation') {
-      steps {
-        pwd(tmp: true)
-        dir(path: './sampleDirectory') {
-          sh '''pwd
-echo "I\'m inside"'''
-        }
-        
-        dir(path: '${WORKSPACE}') {
-          sh 'ls -la'
-        }
-        
-      }
+    agent {
+        docker { image 'node:7-alpine' }
     }
-  }
-  environment {
-    TESTENV = '1'
-    OUPUTFILE = 'trial.list'
-  }
-}
+    stages {
+        stage('Test') {
+            steps {
+                sh 'node --version'
+            }
+        }
+    }
+}  
