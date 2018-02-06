@@ -113,10 +113,6 @@ __initialize_assertions()
 {
   [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
   
-  #SLCF_SHELL_RESOURCEDIR="${SLCF_SHELL_TOP}/resources"
-  #SLCF_SHELL_FUNCTIONDIR="${SLCF_SHELL_TOP}/lib"
-  #SLCF_SHELL_UTILDIR="${SLCF_SHELL_TOP}/utilities"
-
   # shellcheck source=/dev/null
 
   . "${SLCF_SHELL_TOP}/lib/constants.sh"

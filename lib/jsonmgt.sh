@@ -516,15 +516,27 @@ fi
 \which 'jq' > /dev/null 2>&1
 if [ $? -ne 0 ]
 then
-  printf "[WARN     ] %s\n" "Unable to utilize jsonmgt.sh since << jq >> is NOT available from the commandline!" "Please include ${SLCF_SHELL_TOP}/resources/<OSTYPE> in your search path..."
-  printf "\n"
-  SLCF_LIBRARY_ISSUE=1
+  \which 'python' > /dev/null 2>&1
+  if [ $? -ne 0 ]
+  then
+    printf "[WARN     ] %s\n" "Unable to utilize jsonmgt.sh since << jq|python >> is NOT available from the commandline!" "Please include ${SLCF_SHELL_TOP}/resources/<OSTYPE> in your search path..."
+    printf "\n"
+    SLCF_LIBRARY_ISSUE=1
+  else
+    jq_exe="$( \which 'python' ) -c 'import sys, json; print json.load(sys.stdin)"
+    use_python_parser_for_json=1
+  fi
 else
-  jq_exe=$( \which 'jq' )
-  yaml_exe=$( \which 'yaml2json' )
-  
+  jq_exe="$( \which 'jq' )"
+  yaml_exe="$( \which 'yaml2json' )"
+  jq_exe_found=1
+fi
+
+if [ "${use_python_parser_for_json}" -eq 1 -o "${jq_exe_found}" -eq 1 ]
+then
   type "__initialize" 2>/dev/null | \grep -q 'is a function'
-  
+
+  # shellcheck source=/dev/null
   [ $? -ne 0 ] && . "${SLCF_SHELL_TOP}/lib/base_logging.sh"
 
   __initialize_jsonmgt

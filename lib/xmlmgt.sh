@@ -1176,13 +1176,25 @@ fi
 \which 'xmlstarlet' >/dev/null 2>&1
 if [ $? -ne 0 ]
 then
-  printf "[WARN     ] %s\n" "Unable to utilize xmlmgt.sh since xmlstarlet is NOT available from the commandline!" "Please include ${SLCF_SHELL_RESOURCEDIR}/<OSTYPE> in your search path..."
-  printf "\n"
-  SLCF_LIBRARY_ISSUE=1
+  \which 'python' > /dev/null 2>&1
+  if [ $? -ne 0 ]
+  then
+    printf "[WARN     ] %s\n" "Unable to utilize xmlmgt.sh since << xmlstarlet|python >> is NOT available from the commandline!" "Please include ${SLCF_SHELL_TOP}/resources/<OSTYPE> in your search path..."
+    printf "\n"
+    SLCF_LIBRARY_ISSUE=1
+  else
+    xml_exe="$( \which 'python' ) -c 'from lxml.etree import parse; from sys import stdin; print '\n'.join(parse(stdin).xpath"
+    use_python_parser_for_xml=1
+  fi
 else
   xml_exe=$( \which 'xmlstarlet' )
+  xmlstarlet_exe_found=1
+fi
+
+if [ "${use_python_parser_for_xml}" -eq 1 -o "${xmlstarlet_exe_found}" -eq 1 ]
+then
   type "__initialize" 2>/dev/null | \grep -q 'is a function'
-  
+
   # shellcheck source=/dev/null
   [ $? -ne 0 ] && . "${SLCF_SHELL_TOP}/lib/base_logging.sh"
 

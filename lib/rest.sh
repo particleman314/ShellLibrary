@@ -301,7 +301,7 @@ run_rest_api()
   
   [ "${passwd_decode}" -eq "${YES}" ] && passwd="$( decode_passwd "${passwd}" )"
   
-  [ "$( is_empty --str "restmapname" )" -eq "${NO}" ] && cmd="$( __get_rest_api_address "${restmapname}" )/${cmd}"
+  [ "$( is_empty --str "${restmapname}" )" -eq "${NO}" ] && cmd="$( __get_rest_api_address "${restmapname}" )/${cmd}"
   
   typeset outfile="$( make_output_file --channel 'CURL_OUTPUT' )"
   typeset fullcmd="${curl_exe} -s -L -u ${user_id}:${passwd} $@ ${cmd} -o ${outfile}"
