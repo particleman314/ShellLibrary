@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer="$( full_decode )"
 assert_success $?

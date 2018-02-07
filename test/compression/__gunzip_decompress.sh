@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 origfile='compressed_file.txt'
 compression_file="${origfile}.gz"

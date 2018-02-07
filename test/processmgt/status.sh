@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 current_qm="${QUIET_MODE}"
 QUIET_MODE="${YES}"

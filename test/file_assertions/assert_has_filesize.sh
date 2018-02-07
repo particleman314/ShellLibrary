@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 file="${SLCF_SHELL_TOP}/lib/file_assertions.sh"
 

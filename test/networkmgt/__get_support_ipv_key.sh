@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( __get_support_ipv_key )
 RC=$?

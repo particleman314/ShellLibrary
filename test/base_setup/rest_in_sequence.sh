@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 word_list="A quick brown fox jumped over the lazy dog"
 

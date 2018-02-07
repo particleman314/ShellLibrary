@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( __pids_pidof bash )
 assert_not_empty "${answer}"

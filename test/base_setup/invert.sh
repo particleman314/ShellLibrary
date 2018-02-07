@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( invert )
 assert_true "${answer}"

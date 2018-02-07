@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 queue_name='testq'
 

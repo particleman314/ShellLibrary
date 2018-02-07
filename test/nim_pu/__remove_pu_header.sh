@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 filename="${SLCF_SHELL_TOP}/test/${SAMPLE_PU_OUTPUT}"
 assert_not_empty "${filename}"

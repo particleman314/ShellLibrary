@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 assert 2 $( increment 1 1 )
 assert 2 $( increment 1 )

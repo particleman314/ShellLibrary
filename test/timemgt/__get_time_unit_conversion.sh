@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( __get_time_unit_conversion )
 assert_failure $?

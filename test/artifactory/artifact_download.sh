@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 artifact_download
 assert_failure $?

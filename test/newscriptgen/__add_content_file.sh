@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 sample_file1="${SLCF_SHELL_TOP}/test/${TEST_ONLY_DISCLAIMER}"
 sample_file2="${SLCF_SHELL_TOP}/test/${TEST_ONLY_PKGDETAIL}"

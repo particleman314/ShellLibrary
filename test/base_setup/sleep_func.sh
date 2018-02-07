@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 sleep_func -s 1 --old-version
 assert_success $?

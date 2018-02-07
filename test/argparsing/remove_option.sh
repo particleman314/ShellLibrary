@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 current_option="${OPTALLOW_ALL}"
 OPTALLOW_ALL="${YES}"

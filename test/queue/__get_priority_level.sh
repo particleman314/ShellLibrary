@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( __get_priority_level )
 assert_equals "${DEFAULT_PRIORITY_LEVEL}" "${answer}"

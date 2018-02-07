@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 filename="${SAMPLE_PU_OUTPUT}"
 assert_not_empty "${filename}"

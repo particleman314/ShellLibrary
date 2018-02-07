@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2015.  All rights reserved. 
 # MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
@@ -234,7 +234,7 @@ __get_time_unit_conversion()
 
 __initialize_timemgt()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
 
   __load __initialize_stringmgt "${SLCF_SHELL_TOP}/lib/stringmgt.sh"
   __load __initialize_numerics "${SLCF_SHELL_TOP}/lib/numerics.sh"

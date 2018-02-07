@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 compression_file='compression/compressed_file.txt.7z'
 

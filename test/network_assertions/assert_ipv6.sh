@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 ipv6_addr='ffc0::1'
 non_ipv6_addr='hhhh:jdfl::1'

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 need_reset="${NO}"
 

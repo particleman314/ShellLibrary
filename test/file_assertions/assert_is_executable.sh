@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 dir="${SUBSYSTEM_TEMPORARY_DIR}"
 file1="$( which ls )"

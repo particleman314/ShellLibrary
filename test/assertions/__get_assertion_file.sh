@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 std_opts="--suppress ${YES} --dnr"
 need_reset="${NO}"

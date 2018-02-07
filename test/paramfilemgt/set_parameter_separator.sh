@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 reserve_answer=$( get_parameter_separator )
 assert_success $?

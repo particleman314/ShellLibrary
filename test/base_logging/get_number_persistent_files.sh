@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( get_number_persistent_files )
 detail "Number Persistent Files : ${answer}"

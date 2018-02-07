@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 OLD_WAREHOUSE='10.238.40.43'
 assert_empty "${__SSH_COMMANDS}"

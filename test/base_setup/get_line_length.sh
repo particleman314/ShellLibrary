@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 line=''
 answer=$( get_line_length "${line}" )

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 associate_file_to_channel
 assert_failure $?

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 file_nonmatch="${SLCF_SHELL_TOP}/lib/networkmgt.sh"
 file_match="${SLCF_SHELL_TOP}/lib/assertions.sh"

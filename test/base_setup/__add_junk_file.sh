@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 assert_empty "${JUNK_FILES}"
 

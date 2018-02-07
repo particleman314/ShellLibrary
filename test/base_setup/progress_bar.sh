@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 max=5
 for i in $( seq 1 ${max} )

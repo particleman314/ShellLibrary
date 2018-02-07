@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer="$( __get_artifact_extension )"
 assert_success $?

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 section='/test_config_basic'
 

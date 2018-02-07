@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 . "${SLCF_SHELL_TOP}/lib/file_assertions.sh"
 assert_success $?

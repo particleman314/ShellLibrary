@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 samplefile='test_base_setup.sh'
 assert_not_empty "${samplefile}"

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 . "${SLCF_CURRENT_TEST_LOCATION}/__setup_configuration.sh"
 assert_not_empty "${TEST_CONFIG_BASIC}"

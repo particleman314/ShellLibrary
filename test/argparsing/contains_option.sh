@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # tag : library,sample #### This is a sample tag definition
 

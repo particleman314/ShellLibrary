@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 file1="${SLCF_SHELL_TOP}/test/file_assertions/assert_files_same.sh"
 file2="${SLCF_SHELL_TOP}/test/file_assertions/assert_files_same.sh"

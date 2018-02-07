@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 check_for_cmd_in_path ''
 assert_success $?

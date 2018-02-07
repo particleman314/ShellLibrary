@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer="$( get_artifactory_password )"
 assert_success $?

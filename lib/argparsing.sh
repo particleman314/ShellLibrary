@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
 # MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
@@ -40,7 +40,7 @@
 
 # shellcheck disable=SC2016,SC1090,SC2039,SC2086,SC1117
 
-[ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+[ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
 
 # shellcheck source=/dev/null
 

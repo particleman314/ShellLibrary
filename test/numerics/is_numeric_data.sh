@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 true_checks='1 10 1.1 1e3 -6e-4'
 #true_checks='1 10 1.1 -1 -1.6'

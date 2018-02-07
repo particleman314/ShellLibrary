@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( popd )
 assert_equals "${PWD}" "${answer}"

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
 # MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
@@ -58,13 +58,8 @@ __debug()
 
 __initialize_debugging()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
   
-  #SLCF_SHELL_RESOURCEDIR="${SLCF_SHELL_TOP}/resources"
-  #SLCF_SHELL_FUNCTIONDIR="${SLCF_SHELL_TOP}/lib"
-  #SLCF_SHELL_UTILDIR="${SLCF_SHELL_TOP}/utilities"
-
-
   __load __initialize_base_setup "${SLCF_SHELL_TOP}/lib/base_setup.sh"
   __initialize "__initialize_debugging"
 }

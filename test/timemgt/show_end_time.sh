@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer_start=$( show_start_time )
 assert_success $?

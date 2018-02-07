@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 template_word_list="A quick brown fox jumped over the lazy dog"
 word_list="${template_word_list}"

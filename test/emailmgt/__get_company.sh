@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 reserve_answer=$( __get_company )
 assert_success $?

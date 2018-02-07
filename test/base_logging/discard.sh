@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 tmpfile="${SUBSYSTEM_TEMPORARY_DIR}/test_discard.txt"
 \touch "${tmpfile}"

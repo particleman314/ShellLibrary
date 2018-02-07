@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 load_error_definitions --file 'global_error_defs.rc' --suppress
 assert_success $?

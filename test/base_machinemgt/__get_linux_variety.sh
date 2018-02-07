@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 local_machinespecs
 if [ "${OSVARIETY}" == 'linux' ]

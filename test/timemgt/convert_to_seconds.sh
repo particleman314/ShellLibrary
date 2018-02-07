@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 if [ "$( uname -s )" != 'SunOS' ]
 then

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( get_network_adapters_by_type )
 assert_failure $?

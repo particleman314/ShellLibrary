@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( get_loopback_adapter_types )
 assert_success $?

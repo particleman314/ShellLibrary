@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 file_match="${SLCF_SHELL_FUNCTIONDIR}/assertions.sh"
 

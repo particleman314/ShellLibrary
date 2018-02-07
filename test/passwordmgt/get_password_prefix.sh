@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 assert_not_empty "${__DEFAULT_PASSWORD_PREFIX}"
 assert_not_empty "${__PASSWORD_PREFIX}"

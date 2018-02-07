@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 db_id='API_DB_TEST'
 key='myKey'

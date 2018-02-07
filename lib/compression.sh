@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016-2017.  All rights reserved. 
 # MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
@@ -50,7 +50,7 @@ fi
 
 __initialize_compression()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
     
   #SLCF_SHELL_RESOURCEDIR="${SLCF_SHELL_TOP}/resources"
   #SLCF_SHELL_FUNCTIONDIR="${SLCF_SHELL_TOP}/lib"
@@ -214,7 +214,7 @@ __bunzip_decompress()
   ### See if the input file is a relative path versus an absolute path
   ###
   [ "$( \basename "${infile}" )" -eq "${infile}" ] && infile="./${infile}"
-  infile="$( \readlink -f "${infile}" )"
+  infile="$( \readlink "${infile}" )"
 
   typeset reduced_infile="$( \basename "${infile}" )"
 
@@ -338,7 +338,7 @@ __gunzip_decompress()
   ### See if the input file is a relative path versus an absolute path
   ###
   [ "$( \basename "${infile}" )" -eq "${infile}" ] && infile="./${infile}"
-  infile="$( \readlink -f "${infile}" )"
+  infile="$( \readlink "${infile}" )"
 
   typeset reduced_infile="$( \basename "${infile}" )"
 
@@ -412,7 +412,7 @@ __make_compression_dir()
 {
   typeset outdir="$1"
 
-  outdir="$( \readlink -f "${outdir}" )"
+  outdir="$( \readlink "${outdir}" )"
 
   [ -z "${outdir}" ] && outdir="$( make_temp_dir )"
   
@@ -484,7 +484,7 @@ __tar_decompress()
   ### See if the input file is a relative path versus an absolute path
   ###
   [ "$( \basename "${infile}" )" -eq "${infile}" ] && infile="./${infile}"
-  infile="$( \readlink -f "${infile}" )"
+  infile="$( \readlink "${infile}" )"
 
   ###
   ### Determine if original should be kept...
@@ -551,7 +551,7 @@ __unzip_decompress()
   ### See if the input file is a relative path versus an absolute path
   ###
   [ "$( \basename "${infile}" )" -eq "${infile}" ] && infile="./${infile}"
-  infile="$( \readlink -f "${infile}" )"
+  infile="$( \readlink "${infile}" )"
 
   typeset reduced_infile="$( \basename "${infile}" )"
 

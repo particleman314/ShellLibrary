@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( get_network_adapters_by_ipv_type )
 assert_success $?

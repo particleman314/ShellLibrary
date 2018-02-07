@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2017.  All rights reserved. 
 # MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
@@ -99,7 +99,7 @@ __get_version_id()
 
 __initialize_artifactory()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
 
   __load __initialize_base_setup "${SLCF_SHELL_TOP}/lib/base_setup.sh"
   __load __initialize_base_logging "${SLCF_SHELL_TOP}/lib/base_logging.sh"

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 actual=0
 expectation=2

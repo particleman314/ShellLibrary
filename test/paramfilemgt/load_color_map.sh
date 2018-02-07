@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 load_color_map --suppress
 assert_success $?

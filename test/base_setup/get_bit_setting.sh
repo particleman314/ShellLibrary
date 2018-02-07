@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 sample_data="0110010101001010"
 answer=$( get_bit_setting --data "${sample_data}" --id 1 )

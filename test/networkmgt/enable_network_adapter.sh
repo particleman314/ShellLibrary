@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 enable_network_adapter
 RC=$?

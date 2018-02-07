@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 has_sshkey
 RC=$?

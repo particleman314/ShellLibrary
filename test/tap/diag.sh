@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 diag 'This is a simple test of output'
 diag This is a multiline test of output

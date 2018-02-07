@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 sample=''
 answer=$( __valid_line_group "${sample}" )

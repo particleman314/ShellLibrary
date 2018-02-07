@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( get_all_persistent_channels )
 detail "Persistent Channels : ${answer}"

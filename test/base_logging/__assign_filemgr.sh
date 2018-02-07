@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 __assign_filemgr
 assert_failure $?

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 input=1
 answer1=$( interpret_yn "${input}" )

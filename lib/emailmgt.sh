@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
 # MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
@@ -62,7 +62,7 @@ __generate_sendmail_hookscript()
   [ ! -d "${__EMAIL_TMP_DIR}" ] && \mkdir "${__EMAIL_TMP_DIR}"
   
   \cat << EOF > "${__EMAIL_TMP_DIR}/.sendmail-hook"
-#!/bin/sh
+#!/usr/bin/env bash
 
 \sed '1,/^\$/{
 s,^\\(Content-Type: \\).*$,\\1text/html; charset=utf-8,g

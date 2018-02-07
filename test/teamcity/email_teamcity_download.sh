@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 email_teamcity_download
 assert_failure $?

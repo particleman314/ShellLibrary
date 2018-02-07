@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 ipv4_addr='192.168.0.1'
 non_ipv4_addr='188'

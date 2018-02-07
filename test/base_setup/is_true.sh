@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 false_checks='f F false False FALSE no No NO n N'
 true_checks='t T true True TRUE yes Yes YES y Y'

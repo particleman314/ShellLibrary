@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 localip=$( get_machine_ip )
 detail "Local ip = ${localip}"

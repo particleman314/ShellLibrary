@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 TEST_CONFIG_BASIC='test_config_basic.cfg'
 TEST_CONFIG_SIMPLE='test_config_simple.cfg'

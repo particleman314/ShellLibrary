@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 assert 'Hello' $( escapify 'Hello' )
 assert '\\Hello' $( escapify '\Hello' )

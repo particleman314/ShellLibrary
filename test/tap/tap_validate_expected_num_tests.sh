@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( tap_validate_expected_num_tests )
 assert_success $?

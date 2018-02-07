@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 convert_pattern
 assert_failure $?

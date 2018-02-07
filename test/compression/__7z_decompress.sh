@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 compression_file='compressed_file.txt.7z'
 assert_is_file "${compression_file}"

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 sample_data="A:B:C"
 answer=$( add_element )

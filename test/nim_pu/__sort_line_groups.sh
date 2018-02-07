@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 sample=''
 answer=$( __sort_line_groups "${sample}" )

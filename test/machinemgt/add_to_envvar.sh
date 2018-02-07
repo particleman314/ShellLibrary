@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 detail "Before :"
 detail "   PATH --> ${PATH}"

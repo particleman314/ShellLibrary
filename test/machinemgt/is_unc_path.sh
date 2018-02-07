@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 if [ $( is_windows_machine ) -eq "${YES}" ]
 then

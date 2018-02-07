@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 answer=$( print_plain --message 'Hello World' )
 assert_success $?

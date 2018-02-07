@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 template='Four score and seven years ago...'
 

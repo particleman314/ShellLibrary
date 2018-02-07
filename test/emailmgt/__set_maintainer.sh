@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 reserve_answer=$( __get_maintainer )
 assert_success $?

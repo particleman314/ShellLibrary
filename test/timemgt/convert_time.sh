@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #__today
 answer=$( convert_time --num-seconds 0 )

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 load_parameter_file
 assert_failure $?

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 f1=$( make_output_file )
 f2=$( make_output_file --prefix 'abc' )

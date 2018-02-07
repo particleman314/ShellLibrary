@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2017.  All rights reserved. 
 # MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
@@ -58,7 +58,7 @@ fi
 
 __initialize_cmdmgt()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
   
   #SLCF_SHELL_RESOURCEDIR="${SLCF_SHELL_TOP}/resources"
   #SLCF_SHELL_FUNCTIONDIR="${SLCF_SHELL_TOP}/lib"

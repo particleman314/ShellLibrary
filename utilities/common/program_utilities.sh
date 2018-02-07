@@ -1,13 +1,12 @@
 ###############################################################################
-# Copyright (c) 2016 CA.  All rights reserved. 
-# CA. 
-# CA IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Copyright (c) 2017.  All rights reserved. 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, CA IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# CA EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -17,7 +16,6 @@
 ###############################################################################
 #
 # Author           : Mike Klusman
-# Company          : CA
 # Software Package : Shell Automated Testing -- Program Support
 # Application      : Support Functionality
 # Language         : Bourne Shell
@@ -345,7 +343,7 @@ __common_tool_startup()
   print_btf_detail --msg "Starting (UTC)      : $( __change_time_to_UTC ${sttm} )" --prefix "$( __extract_value 'PREFIX_INFO' )"
   print_btf_detail --msg "Temporary Directory : ${tpdir}" --prefix "$( __extract_value 'PREFIX_INFO' )"
 
-  [ -n "$( __extract_value 'INPUT_FILE' )" ] && print_btf_detail --msg "Input Driver File   : $( \readlink -e "$( __extract_value 'INPUT_FILE' )" )" --prefix "$( __extract_value 'PREFIX_INFO' )"
+  [ -n "$( __extract_value 'INPUT_FILE' )" ] && print_btf_detail --msg "Input Driver File   : $( \readlink "$( __extract_value 'INPUT_FILE' )" )" --prefix "$( __extract_value 'PREFIX_INFO' )"
 
   print_btf_detail --msg "Output location     : $( __extract_value 'OUTPUT' )" --prefix "$( __extract_value 'PREFIX_INFO' )"
   printf "\n"

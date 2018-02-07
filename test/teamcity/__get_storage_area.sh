@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 sample_sa=$( make_temp_dir )
 schedule_for_demolition "${sample_sa}"

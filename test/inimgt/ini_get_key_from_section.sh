@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 assert_is_file "${TEST_INI_FILE}"
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 __pids_pidof
 assert_failure $?

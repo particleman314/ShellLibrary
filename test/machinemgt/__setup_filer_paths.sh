@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 FILER_FILE="${SLCF_SHELL_TOP}/test/machinemgt/filer.txt"
 

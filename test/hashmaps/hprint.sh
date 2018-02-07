@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 map_out="$( hprint --map "nomap" )"
 assert_success $?

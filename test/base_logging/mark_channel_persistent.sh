@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 result=$( make_output_file --prefix 'abc' )
 assert_not_empty "${result}"

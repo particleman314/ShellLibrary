@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 find_if_file_or_dir_exists
 assert_failure $?

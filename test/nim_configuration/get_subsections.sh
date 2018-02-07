@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #assert_not_empty "${TEST_CONFIG_BASIC}"
 #assert_not_empty "${TEST_CONFIG_DEEP}"

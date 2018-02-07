@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 check_teamcity_job
 assert_failure $?

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 sample_data="A:B:C:D-E;F"
 answer=$( get_element --data "${sample_data}" --id 1 --separator ':' )

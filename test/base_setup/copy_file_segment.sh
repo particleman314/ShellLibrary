@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 calc_md5()
 {

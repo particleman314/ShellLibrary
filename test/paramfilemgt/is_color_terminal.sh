@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 ###
 ### This test is depending on the OS flavor and how it is run

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 dir="${SUBSYSTEM_TEMPORARY_DIR}"
 file="${SLCF_SHELL_TOP}/test/file_assertions/assert_is_directory.sh"

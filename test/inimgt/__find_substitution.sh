@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 __find_substitution
 assert_failure $?

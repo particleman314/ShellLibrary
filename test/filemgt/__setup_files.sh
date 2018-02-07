@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 external_file_manipulation()
 {

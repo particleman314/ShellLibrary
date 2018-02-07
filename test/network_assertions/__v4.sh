@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 octet=0
 answer=$( __v4 ${octet} )

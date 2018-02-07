@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 sample=
 answer="$( convert_from_artifactory_coordinate "${sample}" )"

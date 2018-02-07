@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 __debug "Hello"
 assert_success $?

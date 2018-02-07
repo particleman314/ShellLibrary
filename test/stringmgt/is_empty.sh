@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 assert_true $( is_empty )
 assert_true $( is_empty --str ' ' )

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #answer=$( not_ok "${PASS}" )
 #assert_failure $?

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 [ -f "${SLCF_SHELL_TOP}/test/filemgt/__setup_files.sh" ] && . "${SLCF_SHELL_TOP}/test/filemgt/__setup_files.sh" internal 
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 network_adapter=$( get_network_adapter )
 assert_not_empty "${network_adapter}"

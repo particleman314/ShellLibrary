@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 tempdir="${SUBSYSTEM_TEMPORARY_DIR}"
 

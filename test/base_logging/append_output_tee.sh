@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 f1=$( make_output_file --prefix 'xyz' --channel 'ABC' )
 assert_not_empty "${f1}"
