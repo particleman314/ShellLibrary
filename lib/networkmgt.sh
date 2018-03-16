@@ -1,12 +1,13 @@
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -15,10 +16,11 @@
 
 ###############################################################################
 #
-# Author           : Mike Klusman
-# Software Package : Shell Automated Testing -- Network Functionality
-# Application      : Product Functionality
-# Language         : Bourne Shell
+## @Author           : Mike Klusman
+## @Software Package : Shell Automated Testing -- Network Functionality
+## @Application      : Product Functionality
+## @Language         : Bourne Shell
+## @Version          : 1.12
 #
 ###############################################################################
 
@@ -81,20 +83,14 @@ __get_support_ipv_key()
 
 __initialize_networkmgt()
 {
-  if [ -z "${SLCF_SHELL_TOP}" ]
-  then
-    SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
-    SLCF_SHELL_RESOURCEDIR="${SLCF_SHELL_TOP}/resources"
-    SLCF_SHELL_FUNCTIONDIR="${SLCF_SHELL_TOP}/lib"
-    SLCF_SHELL_UTILDIR="${SLCF_SHELL_TOP}/utilities"
-  fi
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( ${__REALPATH} ${__REALPATH_OPTS} "$( \dirname '$0' )" )
 
   __load __initialize_execaching "${SLCF_SHELL_TOP}/lib/execaching.sh"
   __load __initialize_machinemgt "${SLCF_SHELL_TOP}/lib/machinemgt.sh"
 
   __ip_dot_notation_regex='__'
 
-  . "${SLCF_SHELL_FUNCTIONDIR}/network_assertions.sh"
+  . "${SLCF_SHELL_TOP}/lib/network_assertions.sh"
 
   __initialize "__initialize_networkmgt"
 }
@@ -294,9 +290,9 @@ get_loopback_adapter_types()
   done
   shift $(( OPTIND-1 ))
 
-  typeset loopback_adapters
+  typeset loopback_adapters=
   typeset adapters=$( get_network_adapter_types )
-  typeset a
+  typeset a=
   for a in ${adapters}
   do
     strstr 'lo' "${a}"
@@ -335,7 +331,7 @@ get_machine_ip()
 
   typeset nic_adapters="$( get_network_adapter_types )"
 
-  typeset nla
+  typeset nla=
   for nla in ${nic_adapters}
   do
     [ -n "${selection}" ] && [ "${nla}" != "${selection}" ] && continue
@@ -352,7 +348,7 @@ get_machine_ip()
 
       __add_junk_file "${nicfile}"
 
-      typeset add_on_grep
+      typeset add_on_grep=
       if [ "${key}" == 'inet6' ]
       then
         typeset lv=$( to_lower $( __get_linux_variety ) )
@@ -360,7 +356,7 @@ get_machine_ip()
         * ) add_on_grep="grep -i 'scope:${ipv6_type}' |"
         esac
       fi
-      typeset result=$( grep "^${key}\b" "${nicfile}" | ${add_on_grep} cut -f 2 -d ' ' | sed -e 's#addr: *##' )
+      typeset result=$( \grep "^${key}\b" "${nicfile}" | ${add_on_grep} \cut -f 2 -d ' ' | \sed -e 's#addr: *##' )
       [ -n "${result}" ] && printf "%s\n" "${result}"
       return "${PASS}"
     fi
@@ -480,14 +476,14 @@ get_network_adapters_by_ipv_type()
   typeset nic_section_markers=$( \grep -n 'flags' "${nicfile}" | \tr -s ' ' | \tr ' ' ':' | \cut -f 1,2 -d ':' | \tr '\n' ' ' )
   if [ -z "${nic_section_markers}" ]
   then
-    nic_section_markers=$( \grep -n 'Link encap' "${nicfile}" | \tr -s ' ' |\ tr ' ' ':' | \cut -f 1,2 -d ':' | \tr '\n' ' ' )
+    nic_section_markers=$( \grep -n 'Link encap' "${nicfile}" | \tr -s ' ' | \tr ' ' ':' | \cut -f 1,2 -d ':' | \tr '\n' ' ' )
   fi
   nic_cnt=$( __get_line_count "${nicfile}" )
   nic_section_markers+=" ${nic_cnt}:__END__"
 
-  typeset lineid
-  typeset begin_line
-  typeset end_line
+  typeset lineid=
+  typeset begin_line=
+  typeset end_line=
 
   typeset nictype_files=
   typeset nictype=
@@ -516,11 +512,12 @@ get_network_adapters_by_ipv_type()
     fi
   done
 
-  typeset match_types=
-  typeset f
-
   typeset key=$( __get_support_ipv_key "${ipv}" )
   [ -z "${key}" ] && return "${FAIL}"
+
+  typeset line=
+  typeset match_types=
+  typeset f=
 
   for f in ${nictype_files}
   do
@@ -530,7 +527,7 @@ get_network_adapters_by_ipv_type()
     while read -r -u 9 line
     do
       line=$( trim "${line}" )
-      printf "%s\n" "${line}" | grep -q "^${key}\b"
+      printf "%s\n" "${line}" | \grep -q "^${key}\b"
       RC=$?
       if [ "${RC}" -eq "${PASS}" ]
       then
@@ -564,12 +561,12 @@ get_network_adapter()
   done
   shift $(( OPTIND-1 ))
 
-  typeset found_adapters
+  typeset found_adapters=
   if [ $( is_empty --str "${ipv}" ) -eq "${YES}" ]
   then
-    found_adapters=$( get_network_adapter_types )
+    found_adapters="$( get_network_adapter_types )"
   else
-    found_adapters=$( get_network_adapters_by_ipv_type --ipv "${ipv}" )
+    found_adapters="$( get_network_adapters_by_ipv_type --ipv "${ipv}" )"
   fi
 
   [ $( is_empty --str "${found_adapters}" ) -eq "${YES}" ] && return "${FAIL}"
@@ -577,7 +574,7 @@ get_network_adapter()
   typeset non_loopback=$( printf "%s\n" "${found_adapters}" | \grep -v 'lo' )
   if [ -n "${ip}" ]
   then
-    typeset n
+    typeset n=
     for n in ${non_loopback}
     do
       typeset nic_ip=$( get_machine_ip --adapter "${n}" )
@@ -630,7 +627,7 @@ get_virtual_ips()
   shift $(( OPTIND-1 ))
 
   typeset network_adapters=$( get_network_adapter_types )
-  typeset na
+  typeset na=
   for na in ${network_adapters}
   do
     strstr ':' "${na}"
@@ -638,7 +635,7 @@ get_virtual_ips()
     [ "${RC}" -eq "${PASS}" ] && virtips+=" ${na}"
   done
 
-  virtips=$( printf "%s\n" ${virtips} )
+  virtips="$( printf "%s\n" ${virtips} )"
   print_plain --message "${virtips}"
   return "${PASS}"
 }
@@ -684,14 +681,19 @@ is_host_alive()
   esac
 
   RC=$?
-  ###
-  ### TODO : Need to use a non GNU grep version to do this work....
-  ###
-  #printf "%s\n" "${ping_output}" | \grep -A 2 "ping statistics" | \grep -q "0% packet loss"
-  #typeset RC=$?
+
+  typeset pkts_sent="$( trim "$( printf "%s\n" "${ping_output}" | \tail -n 2 | \head -n 1 | \cut -f 1 -d ',' )" | \cut -f 1 -d ' ' )"
+  typeset pkts_revc="$( trim "$( printf "%s\n" "${ping_output}" | \tail -n 2 | \head -n 1 | \cut -f 2 -d ',' )" | \cut -f 1 -d ' ' )"
+  typeset passed="$( printf "%s\n" "scale=2; if (${pkts_revc}/${pkts_sent} > ${threshold}) ${YES} else ${NO}" | \bc )"
+
   if [ "${RC}" -eq "${PASS}" ]
   then
-    print_yes
+    if [ "${passed}" -eq "${YES}" ]
+    then
+      print_yes
+    else
+      print_no
+    fi
   else
     print_no
   fi
@@ -722,7 +724,7 @@ is_ip_addr()
     return "${FAIL}"
   fi
 
-  typeset components
+  typeset components=
   if [ "${ipv}" -eq 4 ]
   then
     components=$( __get_word_count "$( printf "%s" "${ip}" | \sed -e 's#\.# #g' )" )
@@ -793,7 +795,7 @@ is_network_running()
   fi
 
   typeset adapters=$( get_network_adapter_types )
-  typeset n
+  typeset n=
   for n in ${adapters}
   do
     [ "${n}" != "${selection}" ] && continue

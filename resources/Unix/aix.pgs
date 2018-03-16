@@ -1,15 +1,14 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 ###############################################################################
-# Copyright (c) 2016-{{{YEAR}}} CA.  All rights reserved.
-# CA.
-# CA IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A
+# Copyright (c) 2017.  All rights reserved.
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR
-# STANDARD, CA IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION.
-# CA EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -43,7 +42,7 @@ info_package()
 
   if [ $? -eq 0 ]
   then
-    lslpp_exe=$( which lslpp 2>/dev/null )
+    lslpp_exe=$( \which lslpp 2>/dev/null )
   else
     return 1
   fi
@@ -70,7 +69,7 @@ install_local_package()
 
   if [ $? -eq 0 ]
   then
-    installp_exe=$( which installp 2>/dev/null )
+    installp_exe=$( \which installp 2>/dev/null )
   else
     return 1
   fi

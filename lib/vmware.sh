@@ -1,12 +1,13 @@
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -34,23 +35,17 @@
 
 __initialize_vmware()
 {
-  if [ -z "${SLCF_SHELL_TOP}" ]
-  then
-    SLCF_SHELL_TOP=$( readlink -f "$( dirname '$0' )" )
-    SLCF_SHELL_RESOURCEDIR="${SLCF_SHELL_TOP}/resources"
-    SLCF_SHELL_FUNCTIONDIR="${SLCF_SHELL_TOP}/lib"
-    SLCF_SHELL_UTILDIR="${SLCF_SHELL_TOP}/utilities"
-  fi
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
 
-  __load __initialize_rest "${SLCF_SHELL_FUNCTIONDIR}/rest.sh"
-  __load __initialize_passwordmgt "${SLCF_SHELL_FUNCTIONDIR}/passwordmgt.sh"
-  __load __initialize_stringmgt "${SLCF_SHELL_FUNCTIONDIR}/stringmgt.sh"
-  __load __initialize_networkmgt "${SLCF_SHELL_FUNCTIONDIR}/networkmgt.sh"
-  __load __initialize_xmlmgt "${SLCF_SHELL_FUNCTIONDIR}/xmlmgt.sh"
-  __load __initialize_emailmgt "${SLCF_SHELL_FUNCTIONDIR}/emailmgt.sh"
-  __load __initialize_machinemgt "${SLCF_SHELL_FUNCTIONDIR}/machinemgt.sh"
-  __load __initialize_logging "${SLCF_SHELL_FUNCTIONDIR}/logging.sh"
-  __load __initialize_hashmaps "${SLCF_SHELL_FUNCTIONDIR}/hashmaps.sh"
+  __load __initialize_rest "${SLCF_SHELL_TOP}/lib/rest.sh"
+  __load __initialize_passwordmgt "${SLCF_SHELL_TOP}/lib/passwordmgt.sh"
+  __load __initialize_stringmgt "${SLCF_SHELL_TOP}/lib/stringmgt.sh"
+  __load __initialize_networkmgt "${SLCF_SHELL_TOP}/lib/networkmgt.sh"
+  __load __initialize_xmlmgt "${SLCF_SHELL_TOP}/lib/xmlmgt.sh"
+  __load __initialize_emailmgt "${SLCF_SHELL_TOP}/lib/emailmgt.sh"
+  __load __initialize_machinemgt "${SLCF_SHELL_TOP}/lib/machinemgt.sh"
+  __load __initialize_logging "${SLCF_SHELL_TOP}/lib/logging.sh"
+  __load __initialize_hashmaps "${SLCF_SHELL_TOP}/lib/hashmaps.sh"
 
   __initialize "__initialize_vmware"
 }

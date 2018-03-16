@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -43,9 +43,9 @@
 
 if [ -z "${__MAINTAINER}" ]
 then
-  __MAINTAINER='Michael.Klusman'
-  __DESIGNER='Michael.Klusman'
-  __COMPANY='ca.com'
+  __MAINTAINER='klusman'
+  __DESIGNER='klusman'
+  __COMPANY='synopsys.com'
   __EMAIL_OPTS=
   __EMAIL_TMP_DIR=
 fi
@@ -98,7 +98,7 @@ __get_maintainer()
 
 __initialize_emailmgt()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( ${__REALPATH} ${__REALPATH_OPTS} "$( \dirname '$0' )" )
 
   __load __initialize_filemgt "${SLCF_SHELL_TOP}/lib/filemgt.sh"
 
@@ -203,6 +203,9 @@ build_email_list()
 
   [ "${userid}" != "$( __get_maintainer )" ] && [ "${userid}" != "$( __get_designer )" ] && base_emails+=" ${userid}"
 
+  ###
+  ### Need to determine if email is FQDN
+  ###
   typeset all_email_address=
   typeset mr=
   for mr in ${email_list} ${base_emails}
@@ -223,7 +226,13 @@ build_email_list()
     #  printf "%s\n" "${all_email_address}" | grep -q "${fqea_mail}"
     #  [ $? -ne "${PASS}" ] && all_email_address=";${fqea_mail}"
     #fi
-    all_email_address+=";${mr}@${company}"
+    printf "%s\n" "${mr}" | \grep -q '@'
+    if [ $? -ne "${PASS}" ]
+    then
+      all_email_address+=";${mr}@${company}"
+    else
+      all_email_address+=";${mr}"
+    fi
   done
 
   all_email_address="$( printf "%s\n" "${all_email_address}" | \sed -e 's#;# #g' | \tr -s ' ' | \tr ' ' '\n' | \sort | \uniq | \tr '\n' ' '| \tr '_' '.'  | \sed -e 's#^,##' )"

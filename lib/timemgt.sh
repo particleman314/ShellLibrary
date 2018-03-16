@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2015.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -20,7 +20,7 @@
 ## @Software Package : Shell Automated Testing -- Time Management
 ## @Application      : Support Functionality
 ## @Language         : Bourne Shell
-## @Version          : 1.30
+## @Version          : 1.35
 #
 ###############################################################################
 
@@ -31,6 +31,7 @@
 #    __change_time_to_HMS
 #    __change_time_to_local
 #    __change_time_to_UTC
+#    __conversion_time_helper
 #    __extract_time_unit
 #    __extract_hours
 #    __extract_minutes
@@ -92,15 +93,16 @@ __change_time_to_HMS()
 __change_time_to_local()
 {
   typeset epochtime="$1"
-  
+  typeset timeformat='+%c'
+
   if [ -n "${epochtime}" ]
   then
     \which 'adb' >/dev/null 2>&1
     if [ $? -eq "${PASS}" ]
     then
-      printf "%s\n" "${epochtime}" | \adb | \tr -s ' ' | \sed -e 's#^ ##' | \date "+%c"
+      printf "%s\n" "${epochtime}" | \adb | \tr -s ' ' | \sed -e 's#^ ##' | \date "${timeformat}"
     else
-      \date -d "@${epochtime}" "+%c"
+      __conversion_time_helper "${epochtime}" "${timeformat}"
     fi
     return "${PASS}"
   fi
@@ -110,19 +112,38 @@ __change_time_to_local()
 __change_time_to_UTC()
 {
   typeset epochtime="$1"
+  typeset timeformat="${2:-"+%FT%T"}"
+
   if [ -z "${epochtime}" ]
   then
     printf "%s\n" "1900-01-01T00:00:00"
     return "${FAIL}"
   fi
-  
+
   \which "adb" >/dev/null 2>&1
   if [ $? -eq "${PASS}" ]
   then
-    printf "%s\n" "0t${epochtime}" | \adb | \tr -s ' ' | \sed -e 's#^ ##' | \date -u "+%FT%T"
+    printf "%s\n" "0t${epochtime}" | \adb | \tr -s ' ' | \sed -e 's#^ ##' | \date -u "${timeformat}"
   else
-    \date -d "@${epochtime}" -u "+%FT%T"
+    __conversion_time_helper "${epochtime}" "${timeformat}"
   fi
+  return "${PASS}"
+}
+
+__conversion_time_helper()
+{
+  typeset epochtime="$1"
+  typeset timeformat="$2"
+
+  typeset result="$( \date -d "@${epochtime}" "${timeformat}" 2>&1 )"
+  typeset RC=$?
+  printf "%s\n" "${result}" | \grep -q 'usage'
+  typeset bad_usage=$?
+  if [ "${RC}" -ne "${PASS}" ] || [ "${bad_usage}" -eq "${PASS}" ]
+  then
+    result="$( \date -r "${epochtime}" "${timeformat}" )"
+  fi
+  printf "%s\n" "${result}"
   return "${PASS}"
 }
 
@@ -234,7 +255,7 @@ __get_time_unit_conversion()
 
 __initialize_timemgt()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( ${__REALPATH} ${__REALPATH_OPTS} "$( \dirname '$0' )" )
 
   __load __initialize_stringmgt "${SLCF_SHELL_TOP}/lib/stringmgt.sh"
   __load __initialize_numerics "${SLCF_SHELL_TOP}/lib/numerics.sh"
@@ -371,11 +392,22 @@ convert_to_seconds()
   typeset result=
   if [ "$( is_numeric_data --data "$@" )" -eq "${YES}" ]
   then
-    result="$( \date --date="@$@" "+%s" )"
+    result="$( \date --date="@$@" "+%s" 2>&1 )"
   else
-    result="$( \date --date="$@" "+%s" )"
+    result="$( \date --date="$@" "+%s" 2>&1 )"
+  fi
+
+  typeset RC=$?
+  echo "${result} --- ${RC}" >>/tmp/.xyz
+  printf "%s\n" "${result}" | \grep -q 'usage'
+  typeset bad_usage=$?
+  if [ "${RC}" -ne "${PASS}" ] || [ "${bad_usage}" -eq "${PASS}" ]
+  then
+    result="$( \date -j -f "%a %b %d %T %Z %Y" "$@" "+%s" )"
+    echo "REDO : ${result}" >>/tmp/.xyz
   fi
   print_plain --message "${result}"
+  return "${PASS}"
 }
 
 show_start_time()

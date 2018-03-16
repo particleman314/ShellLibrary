@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2017.  All rights reserved. 
 # Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
@@ -15,10 +16,11 @@
 
 ###############################################################################
 #
-# Author           : Mike Klusman
-# Software Package : Shell Automated Testing -- Program Support
-# Application      : Support Functionality
-# Language         : Bourne Shell
+## @Author           : Mike Klusman
+## @Software Package : Shell Automated Testing -- Program Support
+## @Application      : Support Functionality
+## @Language         : Bourne Shell
+## @Version          : 1.52
 #
 ###############################################################################
 
@@ -37,6 +39,7 @@
 #    __escapify
 #    __extract_value
 #    __find_matching_long_parameter
+#    __get_library_attribute
 #    __handle_spaced_output
 #    __ignore_lines
 #    __import_all_variables
@@ -57,8 +60,10 @@
 #    __update_dynamic_overhead
 #    __update_static_overhead
 #    cache_executables
+#    display_cached_executables
 #    display_cmdline_flags
 #    gather_timestamp
+#    get_environment
 #    get_shell_library_version
 #    handle_error_output
 #    handle_output
@@ -74,6 +79,7 @@
 #    process_data
 #    record_step
 #    request_lock_with_timer
+#    setup
 #    store_generated_output
 #    validate_basic_binaries
 #
@@ -389,41 +395,14 @@ __define_internal_variable()
 
 __define_toplevel_tmpdir()
 {
-  ###
-  ### Define the toplevel "temporary" directory based on OS type
-  ###
+  typeset anchor="${1:-'WORKSPACE'}"
   typeset sttm="$( __extract_value 'START_TIME' )"
   [ -z "${sttm}" ] && sttm=$( \date "+%s" )
 
-  typeset tpdir="$( __extract_value 'RESULTS_DIR' )"
-  typeset memopts=
+  typeset data="$( __find_working_directory "${sttm}" "${anchor}" )"
+  typeset tpdir="$( printf "%s\n" "${data}" | \cut -f 1 -d '+' )"
 
-  if [ -z "${tpdir}" ]
-  then
-    if [ -n "${RECURSIVE}" ] && [ "${RECURSIVE}" -gt 0 ]
-    then
-      tpdir="$( __extract_value 'POSSIBLE_RESULTS_DIR' )"
-      if [ -n "${tpdir}" ]
-      then
-        tpdir+="/${sttm}"
-        memopts=$( __import_variable --key "$( __define_internal_variable 'RESULTS_DIR' )" --value "${tpdir}" --use-memory "${YES}" )
-      else
-        memopts=$( __import_variable --key "$( __define_internal_variable 'RESULTS_DIR' )" --value "$( get_temp_dir )/$( get_user_id )/UIM_RELEASE_CHECKER/${sttm}" --use-memory "${YES}" )
-      fi
-    else
-      typeset grpdir="$( __extract_value 'GROUP_DIR' )"
-      if [ -z "${grpdir}" ]
-      then
-        memopts=$( __import_variable --key "$( __define_internal_variable 'RESULTS_DIR' )" --value "$( get_temp_dir )/$( get_user_id )/UIM_RELEASE_CHECKER/${sttm}" --use-memory "${YES}" )
-      else
-        memopts=$( __import_variable --key "$( __define_internal_variable 'RESULTS_DIR' )" --value "$( get_temp_dir )/$( get_user_id )/${grpdir}/${sttm}" --use-memory "${YES}" )
-      fi
-    fi
-  else
-    memopts=$( __import_variable --key "$( __define_internal_variable 'RESULTS_DIR' )" --value "${tpdir}" --use-memory "${YES}" )
-  fi
-
-  printf "%s\n" "${memopts}"
+  printf "%s\n" "${sttm}+${tpdir}+${memopts}"
   return "${PASS}"
 }
 
@@ -477,7 +456,7 @@ __extract_value()
 {
   typeset key="$1"
   typeset specialized_variable_prefix="$2"
-  #[ -z "${__PROGRAM_VARIABLE_PREFIX}" ] && return "${FAIL}"
+  [ -z "${specialized_variable_prefix}" ] && specialized_variable_prefix="${__PROGRAM_VARIABLE_PREFIX}"
   
   typeset varname="$( __define_internal_variable "${key}" "${specialized_variable_prefix}" )"
   if [ $? -eq 0 ] || [ -z "${varname}" ]
@@ -501,15 +480,73 @@ __find_matching_long_parameter()
   typeset sl
   for sl in ${searchlist}
   do
-    typeset shortmatch=$( printf "%s\n" "${sl}" | cut -f 1 -d ':' )
+    typeset shortmatch=$( printf "%s\n" "${sl}" | \cut -f 1 -d ':' )
     if [ "${input}" == "${shortmatch}" ]
     then
-      printf "%s\n" "${sl}" | cut -f 2 -d ':'
+      printf "%s\n" "${sl}" | \cut -f 2 -d ':'
       return "${PASS}"
     fi
   done
   printf "%s\n" "${input}"
   return "${FAIL}"
+}
+
+__find_working_directory()
+{
+  typeset starttime="$1"
+  typeset anchor="$2"
+
+  typeset memopts=
+  typeset tpdir=
+
+  if [ -z "${tpdir}" ]
+  then
+    if [ -n "${RECURSIVE}" ] && [ "${RECURSIVE}" -gt 0 ]
+    then
+      tpdir="$( __extract_value 'POSSIBLE_RESULTS_DIR' )"
+      if [ -n "${tpdir}" ]
+      then
+        tpdir+="/${sttm}"
+        memopts=$( __import_variable --key "$( __define_internal_variable "${anchor}" )" --value "${tpdir}" --use-memory "${YES}" )
+      else
+        memopts=$( __import_variable --key "$( __define_internal_variable "${anchor}" )" --value "$( get_temp_dir )/$( get_user_id )/${anchor}/${sttm}" --use-memory "${YES}" )
+      fi
+    else
+      typeset grpdir="$( __extract_value 'GROUP_DIR' )"
+      if [ -z "${grpdir}" ]
+      then
+        memopts=$( __import_variable --key "$( __define_internal_variable "${anchor}" )" --value "$( get_temp_dir )/$( get_user_id )/${anchor}/${sttm}" --use-memory "${YES}" )
+      else
+        memopts=$( __import_variable --key "$( __define_internal_variable "${anchor}" )" --value "$( get_temp_dir )/$( get_user_id )/${grpdir}/${sttm}" --use-memory "${YES}" )
+      fi
+    fi
+  else
+    memopts=$( __import_variable --key "$( __define_internal_variable "${anchor}" )" --value "${tpdir}" --use-memory "${YES}" )
+  fi
+
+  memopts+=$( __import_variable --key "$( __define_internal_variable "${__PROGRAM_VARIABLE_PREFIX}_ACTIVE" )" --value '1' --use-memory "${YES}" )
+  eval "${memopts}"
+
+  tpdir="$( __extract_value 'WORKSPACE' )"
+  [ ! -d "${tpdir}" ] && \mkdir -p "${tpdir}"
+  [ ! -d "${tpdir}" ] && exit "$( __extract_value 'EXIT' )"      
+
+  printf "%s\n" "${tpdir}+${memopts}"
+  return "${PASS}"
+}
+
+__get_library_attribute()
+{
+  typeset library_name="$1"
+  typeset attr="${2:-Version}"
+
+  if [ -z "${library_name}" ] || [ ! -f "${library_name}" ]
+  then
+    return "${FAIL}"
+  fi
+
+  \cat "${SLCF_SHELL_TOP}/lib/${library_name}.sh" | \grep -i "## @${attr}" | \cut -f 2 -d ':' | \sed -e 's/^[[:blank:]]*//' -e 's/[[:blank:]]*$//'
+  return "${PASS}"
 }
 
 __handle_spaced_output()
@@ -603,11 +640,11 @@ __import_variable()
   typeset fileout="${__PROGRAM_OPTION_FILE}"
   typeset GRAB_FROM_ENVIRONMENT="${NO}"
   
- OPTIND=1
-  while getoptex "use-memory. env key: value. f: file:" "$@"
+  OPTIND=1
+  while getoptex "env key: value. f: file: use-memory." "$@"
   do
     case "${OPTOPT}" in
-        'use-memory' ) USE_MEMORY="${OPTARG:-${YES}}";;
+        'use-memory' ) USE_MEMORY="${OPTARG}"; [ -z "${USE_MEMORY}" ] && USE_MEMORY="${NO}";;
         'env'        ) GRAB_FROM_ENVIRONMENT="${YES}";;
         'key'        ) option="${OPTARG}";;
         'value'      ) option_result="${OPTARG}";;
@@ -628,10 +665,7 @@ __import_variable()
   
   if [ "${USE_MEMORY}" -eq "${NO}" ]
   then
-    if [ -n "${fileout}" ]
-    then
-      printf "%s\n" "${option}='${option_result}'" "export ${option}" >> "${fileout}"
-    fi
+    [ -n "${fileout}" ] && printf "%s\n" "${option}='${option_result}'" "export ${option}" >> "${fileout}"
   else
     printf "%s\n" "${option}='${option_result}'; export ${option};"
   fi
@@ -708,6 +742,51 @@ __make_tab_level()
   level=$( printf '%*s' "${level}" | \tr ' ' "|" | \sed -e "s#|#${varname}#g" )
   printf "%s\n" "${level}"
   return "${PASS}"
+}
+
+__option_manager()
+{
+  typeset SHORT_SINGLE_OPTIONS="$1"
+  typeset SHORT_MULTI_OPTIONS="$2"
+  typeset SINGLE_OPTIONS="$3"
+  typeset MULTI_OPTIONS="$4"
+  typeset SHORT_OPTION_MATCHES="$5"
+  shift 5
+  
+  typeset SO=
+  [ -n "${SHORT_SINGLE_OPTIONS}" ] && [ "${SHORT_SINGLE_OPTIONS}" != '[]' ] && SO+=" ${SHORT_SINGLE_OPTIONS}"
+  [ -n "${SHORT_MULTI_OPTIONS}" ] && [ "${SHORT_MULTI_OPTIONS}" != '[]' ] && SO+=" ${SHORT_MULTI_OPTIONS}"
+  
+  typeset LO=
+  [ -n "${SINGLE_OPTIONS}" ] && [ "${SINGLE_OPTIONS}" != '[]' ] && LO+=" ${SINGLE_OPTIONS}"
+  [ -n "${MULTI_OPTIONS}" ] && [ "${MULTI_OPTIONS}" != '[]' ] && LO+=" ${MULTI_OPTIONS}"
+  
+  typeset fileout_opts=
+  typeset fileout="$( __extract_value 'OPTION_FILE' )"
+  [ -n "${fileout}" ] && fileout_opts="--file ${fileout}"
+
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_RECORDER_STARTING" --value 'Starting' ${fileout_opts}
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_RECORDER_STOPPING" --value 'Completed' ${fileout_opts}
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_SHORT_OPTIONS" --value "${SO}" ${fileout_opts}
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_LONG_OPTIONS" --value "${LO}" ${fileout_opts}
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_PROGRAM_OPTIONS" --value "${SO} ${LO}" ${fileout_opts}
+  
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_SHORT_SINGLE_OPTIONS" --value "${SHORT_SINGLE_OPTIONS}" ${fileout_opts}
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_SHORT_MULTI_OPTIONS" --value "${SHORT_MULTI_OPTIONS}" ${fileout_opts}
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_SINGLE_OPTIONS" --value "${SINGLE_OPTIONS}" ${fileout_opts}
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_MULTI_OPTIONS" --value "${MULTI_OPTIONS}" ${fileout_opts}
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_SHORT_OPTION_MATCHES" --value "${SHORT_OPTION_MATCHES}" ${fileout_opts}
+
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_STATIC_OVERHEAD" --value 0 ${fileout_opts}
+  __import_variable --key "${__PROGRAM_VARIABLE_PREFIX}_DYNAMIC_OVERHEAD" --value 0 ${fileout_opts}
+  
+  ###
+  ### Hack to ensure all commandline args get passed
+  ###
+  typeset args="$@"
+  __setup_program "${SHORT_SINGLE_OPTIONS}" "${SHORT_MULTI_OPTIONS}" "${SINGLE_OPTIONS}" "${MULTI_OPTIONS}" "${SHORT_OPTION_MATCHES}" ${args}
+  return "${PASS}"
+
 }
 
 __process_spo_match()
@@ -816,7 +895,8 @@ __set_internal_value()
   typeset value="$2"
   typeset specialized_variable_prefix="$3"
   
-  #[ -z "${__PROGRAM_VARIABLE_PREFIX}" ] && return "${FAIL}"
+  [ -z "${specialized_variable_prefix}" ] && specialized_variable_prefix="${__PROGRAM_VARIABLE_PREFIX}"
+  [ -z "${specialized_variable_prefix}" ] && return "${FAIL}"
   [ -z "${key}" ] && return "${FAIL}"
   
   typeset varname="$( __define_internal_variable "${key}" "${specialized_variable_prefix}" )"
@@ -851,7 +931,7 @@ __setup_paths()
   [ $# -lt 1 ] || [ -z "$1" ] && return "${FAIL}"
   
   typeset exported_vars=''
-  typeset RC
+  typeset RC=
 
   __set_internal_value 'EXIT' 252
 
@@ -889,11 +969,11 @@ __setup_paths()
   ### Export necessary SLCF variables into the environment so subshells can have access to them
   ###
   exported_vars+='SLCF_SHELL_TOP SLCF_SHELL_LIBDIR SLCF_SHELL_RESOURCEDIR SLCF_SHELL_FUNCTIONDIR SLCF_SHELL_UTILDIR '
-  typeset fd
+  typeset fd=
   for fd in ${exported_vars}
   do
     typeset evaldf_fd
-    eval "evald_fd=\$${fd}"
+    eval "evald_fd=\"\${${fd}}\""
     [ ! -d "${evald_fd}" ] && return "$( __extract_value 'EXIT' )"
   done
   
@@ -961,11 +1041,11 @@ __setup_program()
   typeset args="$@"
   
   typeset USE_MEMORY="${NO}"
-  typeset options_in_memory
+  typeset options_in_memory=
 
   typeset RC="${PASS}"
-  typeset ktfp
-  typeset varval
+  typeset ktfp=
+  typeset varval=
 
   ###
   ### Clears the contents from the commandline option perspective
@@ -1249,7 +1329,7 @@ cache_executables()
     exit "${NO_EXECUTABLE_FOUND}"
   fi
   
-  typeset b
+  typeset b=
   for b in $@
   do
     typeset execache=
@@ -1268,18 +1348,33 @@ cache_executables()
   return "${PASS}"
 }
 
+display_cached_executables()
+{
+  __debug $@
+
+  printf "\n"
+  typeset b=
+  for b in $@
+  do
+    typeset execache=
+    eval "execache=\${${b}_exe}"
+    print_btf_detail --msg "Cached executable path for << ${b} >> --> << ${execache} >>"
+  done
+  return "${PASS}"
+}
+
 display_cmdline_flags()
 {
   typeset program_options="$@"
   typeset found=0
-  typeset ktfp
+  typeset ktfp=
 
   typeset quiet_failure="$( __check_for --key 'QUIET' --failure )"
   
   for ktfp in ${program_options}
   do
     typeset orig_ktfp="${ktfp}"
-    typeset option_result
+    typeset option_result=
 
     ktfp="$( __convert_parameter --param "${ktfp}" )"
     typeset lastchar="${ktfp:$((${#ktfp}-1)):1}"
@@ -1301,6 +1396,33 @@ display_cmdline_flags()
 gather_timestamp()
 {
   \date "+%m-%d-%Y %H:%M:%S [%s]"
+  return "${PASS}"
+}
+
+get_environment()
+{
+  typeset env_vars=
+  typeset remove_program_envvars="${YES}"
+
+  while getoptex "f full" "$@"
+  do
+    case "${OPTOPT}" in
+    'f'|'full' ) remove_program_envvars="${NO}";;
+    esac
+  done
+  shift $(( OPTIND-1 ))
+
+  env_vars="$( \env | \sort )"
+  if [ "${remove_program_envvars}" -eq "${YES}" ]
+  then
+    env_vars="$( printf "%s\n" ${env_vars} )"
+    if [ -n "^${__PROGRAM_VARIABLE_PREFIX}" ]
+    then
+      env_vars="$( printf "%s\n" ${env_vars} | \grep -v "${__PROGRAM_VARIABLE_PREFIX}" )"
+    fi
+  fi
+
+  printf "%s " ${env_vars}
   return "${PASS}"
 }
 
@@ -1480,7 +1602,7 @@ print_btf_detail()
   typeset remove_prefix="${NO}"
 
   OPTIND=1
-  while getoptex "m: msg: message: t: tab-level: no-newline newline-count: append p: prefix: no-prefix clear-line" "$@"
+  while getoptex "no-newline m: msg: message: t: tab-level: newline-count: append p: prefix: no-prefix clear-line" "$@"
   do
     case "${OPTOPT}" in
     'm'|'msg'|'message'  ) msg="${OPTARG}";;
@@ -1501,13 +1623,19 @@ print_btf_detail()
 
   tab_level="$( __make_tab_level --level "${tab_level}" )"
 
-  [ "${newline}" -ne "${NO}" ] && newline='\n' || newline=
+  if [ "${newline}" -ne "${NO}" ]
+  then
+    newline="\\n"
+  else
+    newline=
+  fi
+
   if [ -n "${newline}" ]
   then
     typeset cnt=1
     while [ "${cnt}" -lt "${newline_cnt}" ]
     do
-      newline+='\n'
+      newline+="\\n"
       cnt=$(( cnt + 1 ))
     done
   fi
@@ -1540,15 +1668,17 @@ print_program_version()
 
 process_data()
 {
-  typeset filename
+  typeset filename=
   typeset USE_MEMORY="${NO}"
+  typeset prefix="${__PROGRAM_VARIABLE_PREFIX}"
 
   OPTIND=1
-  while getoptex "f: filename: use-memory." "$@"
+  while getoptex "f: filename: use-memory. prefix:" "$@"
   do
     case "${OPTOPT}" in
     'f'|'filename'   ) filename="${OPTARG}";;
-        'use-memory' ) USE_MEMORY="${OPTARG:-${YES}}";;
+        'use-memory' ) USE_MEMORY="${OPTARG}"; [ -z "${USE_MEMORY}" ] && USE_MEMORY="${NO}";;
+        'prefix'     ) prefix="${OPTARG}";;
     esac
   done
   shift $(( OPTIND-1 ))
@@ -1559,11 +1689,11 @@ process_data()
   typeset tmpfile="${TMP}/$( \basename "${filename}" )_$( __extract_value 'START_TIME' ).tmp"
   \awk -F'#' '{if ( length($1) > 0 ) print $1}' "${filename}" > "${tmpfile}"
   
-  typeset options_in_memory
+  typeset options_in_memory=
   typeset addon_size=8
-  typeset prefix_length=$(( ${#__PROGRAM_VARIABLE_PREFIX} + addon_size )) 
+  typeset prefix_length=$(( ${#prefix} + addon_size )) 
   
-  typeset line
+  typeset line=
   while read -r -u 9 line
   do
     [ -z "${line}" ] || [ ${#line} -lt 1 ] && continue
@@ -1574,7 +1704,7 @@ process_data()
     if [ ${#line} -gt "${addon_size}" ] && [ $( printf "%s\n" "${line}" | \cut -c1-${addon_size} ) == '@include' ]
     then
       typeset include_path="$( __evaluate_variable "$( printf "%s\n" "${line}" | \cut -f 2 -d ' ' )" )"
-      [ -f "${include_path}" ] && options_in_memory+=$( process_data --filename "${include_path}" --use_memory ${USE_MEMORY} )
+      [ -f "${include_path}" ] && options_in_memory+=$( process_data --filename "${include_path}" --use-memory "${USE_MEMORY}" --prefix "${prefix}" )
       continue
     fi
     
@@ -1588,11 +1718,11 @@ process_data()
     ###
     ### Check to see if the prefix is already present, if so DON'T change anything; else at the program prefix
     ###
-    if [ "x$( printf "%s\n" "${key}" | \cut -c1-${#__PROGRAM_VARIABLE_PREFIX} )" == "x${__PROGRAM_VARIABLE_PREFIX}" ]
+    if [ "x$( printf "%s\n" "${key}" | \cut -c1-${#prefix} )" == "x${prefix}" ]
     then
       key="${key}"
     else
-      key="$( __define_internal_variable "${key}" )"
+      key="$( __define_internal_variable "${key}" "${prefix}" )"
     fi
     
     ###
@@ -1603,9 +1733,9 @@ process_data()
 
     value=$( __internal_substitute "${value}" )  ### Allows for re-use of internal defined variables
     value=$( __substitute "${value}" )           ### Allows for pre-defined variables
-    [ "${key:0:${prefix_length}}" == "${__PROGRAM_VARIABLE_PREFIX}_PREFIX_" ] && value="[$( printf "%-11s\n" "${value}" | \sed -e 's#\[\(.*\)\]#\1#g' )]"
+    [ "${key:0:${prefix_length}}" == "${prefix}_PREFIX_" ] && value="[$( printf "%-11s\n" "${value}" | \sed -e 's#\[\(.*\)\]#\1#g' )]"
 
-    options_in_memory+=$( __import_variable --key "${key}" --value "'${value}'" --use-memory "${USE_MEMORY}" )
+    options_in_memory+=$( __import_variable  --use-memory "${USE_MEMORY}" --key "${key}" --value "'${value}'" )
   done 9< "${tmpfile}"
 
   [ -f "${tmpfile}" ] && \rm -f "${tmpfile}"
@@ -1694,6 +1824,131 @@ request_lock_with_timer()
   return "${FAIL}"
 }
 
+setup()
+{
+  typeset program_start_time=$( __today_as_seconds )
+  OPTALLOW_ALL="${YES}"
+
+  typeset _PROGRAM_NAME=$( \basename "$0" | \sed 's/\.[^.]*$//' )
+  typeset _PROGRAM_NAME_CAP=$( printf "%s\n" "${_PROGRAM_NAME}" | \tr [:lower:] [:upper:] )
+  typeset _PROGRAM_STARTUP_DIR="${_PROGRAM_NAME_CAP}_STARTUP_DIR"
+  typeset _PROGRAM_LAUNCH_DIR="${_PROGRAM_NAME_CAP}_LAUNCH_DIR"
+
+  ###
+  ### Determine locations of all necessary paths especially from where we are starting
+  ###
+  if [ $( __check_for --key 'HARNESS_ACTIVE' --prefix 'CANOPUS' --failure ) -eq "${YES}" ]
+  then
+    eval "${_PROGRAM_STARTUP_DIR}=\"$( printf "%s\n" "$0" | \sed '/\n/!G;s/\(.\)\(.*\n\)/&\2\1/;//D;s/.//' | \cut -d / -f 2- | \sed '/\n/!G;s/\(.\)\(.*\n\)/&\2\1/;//D;s/.//' )\""
+    eval "${_PROGRAM_LAUNCH_DIR}=\"$( \pwd -L )\""
+
+    eval "cd \"\${${_PROGRAM_STARTUP_DIR}}\" > /dev/null"
+    eval "${_PROGRAM_STARTUP_DIR}=\"$( \pwd -L )\""
+    eval "cd \"\${${_PROGRAM_LAUNCH_DIR}}\" > /dev/null"
+    eval "${_PROGRAM_NAME_CAP}_STAND_ALONE=${YES}"
+  else
+    eval "${_PROGRAM_STARTUP_DIR}=\"$( \pwd -L )\""
+    eval "${_PROGRAM_LAUNCH_DIR}=\"{_PROGRAM_STARTUP_DIR}\""
+  fi
+
+  eval "__${_PROGRAM_NAME_CAP}_TOPLEVEL=\"\${${_PROGRAM_STARTUP_DIR}}\""
+
+  ###
+  ### Finally make the generic replacement
+  ###
+  eval "_PROGRAM_STARTUP_DIR=\"\${${_PROGRAM_STARTUP_DIR}}\""
+  __toplevel="${_PROGRAM_STARTUP_DIR}"
+  __PROGRAM_VARIABLE_PREFIX="${_PROGRAM_NAME_CAP}"   #### This is where we set the prefix for the __extract_value calls...
+
+  __setup_paths "${SLCF_SHELL_TOP}" "${program_start_time}" '' "${__toplevel}"
+  typeset RC=$?
+  if [ "${RC}" -ne "${PASS}" ]
+  then
+    printf "\n"
+    print_btf_detail --msg "Unable to find support files for $0.  Exiting!" --prefix '[ERROR    ]' --newline-count 2
+    return "${RC}"
+  fi
+
+  ###
+  ### System-wide, harness independent settings
+  ###
+  typeset optfile="$( __extract_value 'OPTION_FILE' )"
+
+  __import_variable --key 'LC_ALL' --value 'C' --file "${optfile}"
+  __import_variable --key '__PROGRAM_OPTION_FILE' --value "${optfile}" --file "${optfile}"
+  __import_variable --key '__PROGRAM_VARIABLE_PREFIX' --value "${__PROGRAM_VARIABLE_PREFIX}" --file "${optfile}"
+
+  ###
+  ### Define some basic properties
+  ###
+  __import_variable --key "$( __define_internal_variable 'STARTUP_DIR' )" --value "$( __extract_value 'STARTUP_DIR' )" --file "${optfile}"
+  __import_variable --key "$( __define_internal_variable 'LOGFILE' )" --value "${__toplevel}/.error_warn_${program_start_time}.log" --file "${optfile}"
+  __import_variable --key "$( __define_internal_variable 'SETUP_OPTIONS_FILE' )" --value "$( __extract_value 'STARTUP_DIR' )/.user_options_${program_start_time}" --file "${optfile}"
+  __import_variable --key "$( __define_internal_variable 'DRYRUN' )" --value "${NO}" --file "${optfile}"
+  __import_variable --key "$( __define_internal_variable 'INPUT_ARGS' )" --value "$( printf "%s " $@ )" --file "${optfile}"
+  __import_variable --key "$( __define_internal_variable '__toplevel' )" --value "${_PROGRAM_STARTUP_DIR}" --file "${optfile}"
+
+  ###
+  ### Reorder command line options as necessary to support getoptex
+  ###
+  typeset cleaned_options=$( cleanup_options "${__toplevel}/.error_warn_${program_start_time}.log" $@ )
+  
+  ###
+  ### Gain access to all help screens for the Canopus Test Harness system
+  ###
+  [ -f "${__toplevel}/help/.load_all_${_PROGRAM_NAME}_usage_screens.sh" ] && . "${__toplevel}/help/.load_all_${_PROGRAM_NAME}_usage_screens.sh"
+  
+  ###
+  ### Read in system specific file data to import into environment
+  ###
+  __set_internal_value 'SYSTEM_DATA_FILE' "${__toplevel}/data/${_PROGRAM_NAME}/.std_${_PROGRAM_NAME}_data"
+  __set_internal_value 'SETTINGS' "$( __handle_option_management ${cleaned_options} )"
+
+  ###
+  ### Separate options to be eval'd into memory (from string/file) and those which should be passed along
+  ###
+  typeset errmsg=$( printf "%s\n" "$( __extract_value 'SETTINGS' )" | \cut -f 4 -d '@' )
+  typeset show_usage=$( printf "%s\n" "$( __extract_value 'SETTINGS' )" | \cut -f 3 -d '@' | \cut -f 1 -d '|' )
+  typeset help_screens=$( printf "%s\n" "$( __extract_value 'SETTINGS' )" | \cut -f 3 -d '@' | \cut -f 2 -d '|' | \sed -e 's#^[[:blank:]]##' )
+  
+  typeset option_preparation=$( printf "%s\n" "$( __extract_value 'SETTINGS' )" | \cut -f 1 -d '@' )
+  [ -n "${option_preparation}" ] && eval "${option_preparation}"
+
+  __set_internal_value 'SETTINGS' "$( printf "%s\n" "$( __extract_value 'SETTINGS' )" | \cut -f 2 -d '@' | \tr '|' ' ' )"
+
+  ###
+  ### Source the options file while in this function (we are in a subshell)
+  ###
+  [ -f "${optfile}" ] && . "${optfile}"
+  if [ $( __check_for --key 'VERBOSE' --success ) -eq "${YES}" ]
+  then
+    if [ -n "${optfile}" ] && [ -f "${optfile}" ]
+    then
+      printf "\n%s\n\n%s\n" "RUNTIME OPTIONS FILE" "$( __extract_value 'DIVIDER' )" >> "$( __extract_value 'STARTUP_DIR' )/.error_warn_${program_start_time}.log"
+      \cat "${optfile}" >> "$( __extract_value 'STARTUP_DIR' )/.error_warn_${program_start_time}.log"
+      printf "%s\n\n" "$( __extract_value 'DIVIDER' )" >> "$( __extract_value 'STARTUP_DIR' )/.error_warn_${program_start_time}.log"
+    fi
+  fi
+
+  [ -z "${show_usage}" ] && show_usage=0
+
+  ###
+  ### Check to see if the help screen should be shown and exit
+  ###
+  if [ "${show_usage}" -ne 0 ]
+  then
+    if [ "${show_usage}" -eq 1 ] || [ "${show_usage}" -eq "${HELP}" ]
+    then
+      [ -n "${errmsg}" ] && printf "\n%s\n" "${errmsg}" 1>&2
+      usage ${help_screens}
+      return "${show_usage}"
+    fi
+  fi
+
+  printf "%s@%s\n" "${optfile}" "$( __extract_value 'SETTINGS' )"
+  return 0
+}
+
 store_generated_output()
 {
   typeset outputdir=
@@ -1720,7 +1975,7 @@ store_generated_output()
     typeset premature_msg="$( __extract_value 'PREMATURE_EXIT_MSG' )"
     premature_msg+="${newline_mrk}Any generated files will be found in directory << ${outputdir} >>${newline_mrk}"
     
-    printf "$( __extract_value 'PREFIX_ERROR' ) %s\n" "${premature_msg}" | \sed -e "s#${newline_mrk}#\n#g" -e "s#${tab_mrk}#   #g" 1>&2
+    printf "$( __extract_value 'PREFIX_ERROR' ) %s\n" "${premature_msg}" | \sed -e "s#${newline_mrk}#$( printf "\n" )#g" -e "s#${tab_mrk}#   #g" 1>&2
     \mkdir -p "${outputdir}"
     if [ $? -ne "${PASS}" ]
     then
@@ -1736,7 +1991,7 @@ store_generated_output()
   fi
 
   typeset all_known_channels=$( get_all_output_channels )
-  typeset ch
+  typeset ch=
   for ch in ${all_known_channels}
   do
     mark_channel_persistent --channel "${ch}" --remove
@@ -1783,7 +2038,7 @@ store_generated_output()
       fi
     done
         
-    typeset fn
+    typeset fn=
     for fn in $@
     do
       [ -n "${fn}" ] && [ -f "${fn}" ] && __register_cleanup "${fn}" 'other'
@@ -1829,7 +2084,7 @@ store_generated_output()
 
 validate_basic_binaries()
 {
-  typeset bp
+  typeset bp=
   typeset bp_failures=0
   typeset RC="${PASS}"
 
@@ -1848,34 +2103,35 @@ validate_basic_binaries()
     print_btf_detail --msg "${divider}" --no-prefix
   fi
   
+  typeset exemsg=
   for bp in $@
   do
     typeset diffsize=$(( maxsize - ${#bp} + 1 ))
-    [ $( __check_for --key 'QUIET' --failure ) -eq "${YES}" ] && print_btf_detail --msg "Verified existence of << ${bp} >> $( printf "%-${diffsize}s" ' ' ) : " --no-newline --no-prefix
+    [ $( __check_for --key 'QUIET' --failure ) -eq "${YES}" ] && exemsg="Verified existence of << ${bp} >> $( printf "%-${diffsize}s" ' ' ) : "
     \which "${bp}" 2>&1 | \grep -q "no ${bp}"
     RC=$?
     if [ "${RC}" -eq "${PASS}" ]
     then
       bp_failures=$(( bp_failures + 1 ))
-      [ $( __check_for --key 'QUIET' --failure ) -eq "${YES}" ] && print_btf_detail --msg '[FAIL]' --append
+      [ $( __check_for --key 'QUIET' --failure ) -eq "${YES}" ] && print_btf_detail --msg "${exemsg} [FAIL]" --no-prefix
     else
-      [ $( __check_for --key 'QUIET' --failure ) -eq "${YES}" ] && print_btf_detail --msg '[PASS]' --append
+      [ $( __check_for --key 'QUIET' --failure ) -eq "${YES}" ] && print_btf_detail --msg "${exemsg} [PASS]" --no-prefix
     fi
   done
 
   if [ $( __check_for --key 'QUIET' --failure ) -eq "${YES}" ]
   then
     printf "\n"
-    print_btf_detail --msg "Basic validation of necessary OS programs : " --no-newline --no-prefix
+    exemsg="Basic validation of necessary OS programs : "
   fi
   
   if [ $( __check_for --key 'QUIET' --failure ) -eq "${YES}" ]
   then
     if [ "${bp_failures}" -lt 1 ]
     then
-      print_btf_detail --msg '[PASS]' --append
+      print_btf_detail --msg "${exemsg} [PASS]" --no-prefix
     else
-      print_btf_detail --msg '[FAIL]' --append
+      print_btf_detail --msg "${exemsg} [FAIL]" --no-prefix
     fi
   fi
   

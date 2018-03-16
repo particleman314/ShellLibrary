@@ -1,7 +1,6 @@
 ###############################################################################
 #
 # Author           : {{{AUTHOR}}}
-# Company          : CA
 # Software Package : Shell Automated Testing -- {{{PKGDESCRIPTION}}}
 # Application      : {{{APPLICATION}}}
 # Language         : Bourne Shell

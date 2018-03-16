@@ -6,7 +6,8 @@ word_list="${template_word_list}"
 answer=$( next_in_sequence --data "${word_list}" )
 assert_equals 'A' "${answer}"
 
-for i in $( seq 1 3 )
+sequence="1 2 3"
+for i in ${sequence}
 do
   word_list=$( rest_in_sequence --data "${word_list}" )
 done

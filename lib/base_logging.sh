@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -59,6 +59,7 @@
 #    make_unique_channel_name
 #    mark_channel_persistent
 #    register_tmpfile
+#    remove_channel
 #    remove_all_output_files
 #    remove_output_file
 #    reset_output_file
@@ -941,6 +942,29 @@ register_tmpfile()
     \sort -u "${discardfile}" > "${discardfile}.sort"
     \mv -f "${discardfile}.sort" "${discardfile}"
   fi
+  return "${PASS}"
+}
+
+remove_channel()
+{
+  __debug $@
+
+  typeset channel=
+
+  OPTIND=1
+  while getoptex "c: channel:" "$@"
+  do
+    case "${OPTOPT}" in
+    'c'|'channel'   ) channel="${OPTARG}";;
+    esac
+  done
+  shift $(( OPTIND-1 ))
+
+  [ "$( is_empty --str "${channel}" )" -eq "${YES}" ] && return "${FAIL}"
+
+  typeset __known_files=$( get_all_output_files )
+  printf "%s " "${__known_files}" | \tr -s ' ' | \tr ' ' '\n' | \grep -v "^${channel}" > "${__FILEMGRFILE}"
+
   return "${PASS}"
 }
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -40,6 +40,7 @@
 #    __record_skip
 #    __reset_assertion_file
 #    __reset_assertion_counters
+#.   __set_display
 #    __setup_assertion_file
 #    __setup_maps
 #    __space_handler
@@ -111,7 +112,7 @@ __handle_force_or_skipped_test()
 
 __initialize_assertions()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( ${__REALPATH} ${__REALPATH_OPTS} "$( \dirname '$0' )" )
   
   # shellcheck source=/dev/null
 
@@ -125,6 +126,7 @@ __initialize_assertions()
   __map_key_func_skip=
   
   __last_result="${PASS}"
+
   __unknown_subsystem_id=0
   __unknown_assertion_id=0
   __tracked_assertion_id=0
@@ -152,7 +154,8 @@ __record_assertion()
   typeset expected=
   typeset actual=
   typeset cause=
-  
+  typeset show_cause_only="${NO}"
+
   typeset title=
   typeset testname=
   typeset filename=
@@ -237,17 +240,31 @@ __record_assertion()
 
   if [ "${dnr}" -ne "${YES}" ]
   then
-    typeset common_str="(TID:${test_id}|AID:${assert_id}) Test ${assertion_response} : ${title} : ${testname}"
-    if [ -n "${expected}" ]
+    typeset identification="(TID:${test_id}|AID:${assert_id}) "
+    typeset test_assertion="Test ${assertion_response}"
+
+    typeset common_str=
+    [ -z "${__DISPLAY_TESTID}" ] || [ "${__DISPLAY_TESTID}" -ne "${NO}" ] && common_str+="${identification}"
+    [ -z "${__DISPLAY_TESTASSERTION}" ] || [ "${__DISPLAY_TESTASSERTION}" -ne "${NO}" ] && common_str+="${test_assertion}"
+    [ -z "${__DISPLAY_TITLE}" ] || [ "${__DISPLAY_TITLE}" -ne "${NO}" ] && common_str+=" : ${title}"
+    [ -z "${__DISPLAY_TESTNAME}" ] || [ "${__DISPLAY_TESTNAME}" -ne "${NO}" ] && common_str+=" : ${testname}"
+
+    if [ -z "${__DISPLAY_TESTDATA}" ] || [ "${__DISPLAY_TESTDATA}" -ne "${NO}" ]
     then
-      common_str+=" : Expectation = <${expected}>"
-      [ -n "${actual}" ] && common_str+=", Actual = <${actual}>"
-    else
-      [ -n "${actual}" ] && common_str+=" : Actual = <${actual}>"
+      if [ -n "${expected}" ]
+      then
+        common_str+=" : Expectation = <${expected}>"
+        [ -n "${actual}" ] && common_str+=", Actual = <${actual}>"
+      else
+        [ -n "${actual}" ] && common_str+=" : Actual = <${actual}>"
+      fi
     fi
-  
-    [ -n "${cause}" ] && [ "${assert_type}" != 'PASS' ] && common_str+=" : Cause --> ${cause}"
-    
+
+    if [ -z "${__DISPLAY_TESTCAUSE}" ] || [ "${__DISPLAY_TESTCAUSE}" -ne "${NO}" ]
+    then
+      [ -n "${cause}" ] && [ "${assert_type}" != 'PASS' ] && common_str+=" : Cause --> ${cause}"
+    fi
+
     if [ -n "${filename}" ]
     then
       printf "%s\n" "${common_str}" >> "${filename}"
@@ -291,6 +308,16 @@ __reset_assertion_counters()
   __unknown_subsystem_id=0
   __unknown_assertion_id=0
   __tracked_assertion_id=0
+}
+
+__set_display()
+{
+  typeset toggle_field="$1"
+  typeset toggle_value="${2:-${YES}}"
+
+  [ -z "${toggle_field}" ] && return "${FAIL}"
+  eval "__DISPLAY_${toggle_field}=${toggle_value}"
+  return "${PASS}"
 }
 
 __setup_assertion_file()
@@ -439,7 +466,6 @@ assert_comparison()
   shift $(( OPTIND-1 ))
 
   OPTALLOW_ALL="${current_OAA}"
-  
   typeset speciality_args="--suppress ${suppression}"
   [ "${dnr}" -eq "${YES}" ] && speciality_args+=" --dnr"
   
@@ -808,7 +834,7 @@ assert_failure()
   typeset expectation="$1"
   shift
 
-  expectation="$( printf "%s\n" "${expectation}" | \sed 's#^[ \t]*##;s#[ \t]*$##' )"
+  expectation="$( printf "%s\n" "${expectation}" | \awk '{$1=$1;print}' )"
 
   [ -z "${expectation}" ] && expectation="${FAIL}"
   typeset args="${speciality_args} ${expectation} ${PASS}"
@@ -858,7 +884,7 @@ assert_false()
   typeset expectation="$1"
   shift
 
-  expectation="$( printf "%s\n" "${expectation}" | \sed 's#^[ \t]*##;s#[ \t]*$##' )"
+  expectation="$( printf "%s\n" "${expectation}" | \awk '{$1=$1;print}' )"
 
   [ -z "${expectation}" ] && expectation="${NO}"
 
@@ -932,7 +958,7 @@ assert_greater_equal()
   speciality_args+=" $@"
   if [ -n "${expectation}" ] && [ -n "${answer}" ]
   then
-    if [ "${expectation}" -ge "${answer}" ]
+    if [ "${answer}" -ge "${expectation}" ]
     then
       __record_pass ${speciality_args}
       return $?
@@ -1007,7 +1033,7 @@ assert_greater()
   speciality_args+=" $@"
   if [ -n "${expectation}" ] && [ -n "${answer}" ]
   then
-    if [ "${expectation}" -gt "${answer}" ]
+    if [ "${answer}" -gt "${expectation}" ]
     then
       __record_pass ${speciality_args}
       return $?
@@ -1082,7 +1108,7 @@ assert_less_equal()
   speciality_args+=" $@"
   if [ -n "${expectation}" ] && [ -n "${answer}" ]
   then
-    if [ "${expectation}" -le "${answer}" ]
+    if [ "${answer}" -le "${expectation}" ]
     then
       __record_pass ${speciality_args}
       return $?
@@ -1165,7 +1191,7 @@ assert_less()
   speciality_args+=" $@"
   if [ -n "${expectation}" ] && [ -n "${answer}" ]
   then
-    if [ "${expectation}" -lt "${answer}" ]
+    if [ "${answer}" -lt "${expectation}" ]
     then
       __record_pass ${speciality_args}
       return $?
@@ -1522,7 +1548,7 @@ assert_success()
   typeset expectation="$1"
   shift
 
-  expectation="$( printf "%s\n" "${expectation}" | \sed 's#^[ \t]*##;s#[ \t]*$##' )"
+  expectation="$( printf "%s\n" "${expectation}" | \awk '{$1=$1;print}' )"
 
   [ -z "${expectation}" ] && expectation="${PASS}"
 
@@ -1577,7 +1603,7 @@ assert_true()
   typeset expectation="$1"
   shift
 
-  expectation="$( printf "%s\n" "${expectation}" | \sed 's#^[ \t]*##;s#[ \t]*$##' )"
+  expectation="$( printf "%s\n" "${expectation}" | \awk '{$1=$1;print}' )"
 
   [ -z "${expectation}" ] && expectation="${YES}"
 

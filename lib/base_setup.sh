@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -311,7 +311,7 @@ __group_line_counts()
 
   [ -n "${group_start_lid}" ] && [ -n "${group_end_lid}" ] && groups="${groups} ${group_start_lid}:${group_end_lid}"
 
-  typeset result=$( printf "%s\n" "${groups}" | \sed 's#^[ \t]*##;s#[ \t]*$##' )
+  typeset result=$( printf "%s\n" "${groups}" | \awk '{$1=$1;print}' )
   [ -n "${groups}" ] && printf "%s\n" "${result}"
   return "${PASS}"
 }
@@ -818,10 +818,7 @@ get_element()
     data="$( printf "${format}\n" "${data}" | \sed -e "s#${separator}#|#g" )"
     separator='|'
   fi
-  #  result="$( printf "${format}\n" "${data}" | \awk -F"${separator}" '$1=$1' | \cut -f ${id} -d ' ' )"
-  #else
-  result="$( printf "${format}\n" "${data}" | \cut -f ${id} -d "${separator}" )"
-  #fi
+  result="$( printf "${format}\n" "${data}" | \cut -s -f ${id} -d "${separator}" )"
 
   [ -n "${result}" ] && printf "${format}\n" "${result}" | \tr -s ' ' | \sed -e 's# $##'
   return "${PASS}"
@@ -883,13 +880,27 @@ get_user_id_home()
   userid=$( get_user_id )
   if [ -f '/etc/passwd' ]
   then
-    typeset userid_home=
-    userid_home=$( \cut -f 1,6 -d ':' /etc/passwd | \grep "^${userid}" | \cut -f 2 -d ':' )
-    [ -z "${userid_home}" ] || [ ! -d "${userid_home}" ] && return "${NO}"
-    printf "%s\n" "${userid_home}"
+    typeset userid_home="$( \cut -f 1,6 -d ':' /etc/passwd | \grep "^${userid}" | \cut -f 2 -d ':' )"
+    if [ -z "${userid_home}" ] || [ ! -d "${userid_home}" ]
+    then
+      if [ -n "${HOME}" ]
+      then
+        printf "%s\n" "${HOME}"
+      else
+        printf "%S\n" "${HOMEPATH}"
+      fi
+    else
+      printf "%s\n" "${userid_home}"
+    fi
     return "${PASS}"
+  else
+    if [ -n "${HOME}" ]
+    then
+      printf "%s\n" "${HOME}"
+    else
+      printf "%S\n" "${HOMEPATH}"
+    fi
   fi
-  return "${FAIL}"
 }
 
 interpret_yn()
@@ -1158,12 +1169,14 @@ remove_color_coding()
 {
   [ -z "$1" ] && return "${PASS}"
   printf "%s\n" "$1" | \sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
+  return "${PASS}"
 }
 
 replace_element()
 {
   remove_element $@
   add_element $@
+  return $?
 }
 
 rest_in_sequence()
@@ -1188,8 +1201,9 @@ rest_in_sequence()
 
   [ "x${separator}" != "x " ] && data=$( printf "%s" "${data}" | \sed -e "s#${separator}# #g" )
 
-  typeset result="$( __rest_in_sequence "${shifter}" "${data}" )"
+  typeset result="$( __rest_in_sequence "${shifter}" ${data} )"
   printf "%s\n" "${result}"
+  return "${PASS}"
 }
 
 sleep_func()

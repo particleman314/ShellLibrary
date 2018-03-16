@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -60,7 +60,7 @@
 
 __initialize_machinemgt()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( ${__REALPATH} ${__REALPATH_OPTS} "$( \dirname '$0' )" )
 
   __load __initialize_base_machinemgt "${SLCF_SHELL_TOP}/lib/base_machinemgt.sh"
   [ -z "${__MAXIMUM_LOGFILE_LINES}" ] && __MAXIMUM_LOGFILE_LINES=2000
@@ -711,7 +711,8 @@ make_temp_file()
   shift $(( OPTIND-1 ))
 
   [ "$( is_empty --str "${user_directory}" )" -eq "${YES}" ] && user_directory="$( get_temp_dir )"
-  user_directory=$( \readlink -f "${user_directory}" )
+  typeset user_directory_test=$( \readlink "${user_directory}" )
+  [ $? -eq "${PASS}" ] && [ "$( is_empty --str "${user_directory_test}" )" -eq "${NO}" ] && user_directory="${user_directory_test}"
 
   typeset tmpfile=$( \mktemp tmp.${__TEMP_PATTERN} )
   RC=$?

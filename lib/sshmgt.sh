@@ -1,12 +1,13 @@
+#!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -15,10 +16,11 @@
 
 ###############################################################################
 #
-# Author           : Mike Klusman
-# Software Package : Shell Automated Testing -- SSH Remote Functionality
-# Application      : Product Functionality
-# Language         : Bourne Shell
+## @Author           : Mike Klusman
+## @Software Package : Shell Automated Testing -- SSH Remote Functionality
+## @Application      : Product Functionality
+## @Language         : Bourne Shell
+## @Version          : 0.76
 #
 ###############################################################################
 
@@ -95,13 +97,7 @@ __execute_remote_queue_cmds()
 
 __initialize_sshmgt()
 {
-  if [ -z "${SLCF_SHELL_TOP}" ]
-  then
-    SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
-    SLCF_SHELL_RESOURCEDIR="${SLCF_SHELL_TOP}/resources"
-    SLCF_SHELL_FUNCTIONDIR="${SLCF_SHELL_TOP}/lib"
-    SLCF_SHELL_UTILDIR="${SLCF_SHELL_TOP}/utilities"
-  fi
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
 
   __load __initialize_execaching "${SLCF_SHELL_TOP}/lib/execaching.sh"
   __load __initialize_machinemgt "${SLCF_SHELL_TOP}/lib/machinemgt.sh"

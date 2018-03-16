@@ -378,7 +378,7 @@ __get_section_from_file_by_lineno()
 
 __initialize_inimgt()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
 
   # shellcheck source=/dev/null
   __load __initialize_stringmgt "${SLCF_SHELL_TOP}/lib/stringmgt.sh"

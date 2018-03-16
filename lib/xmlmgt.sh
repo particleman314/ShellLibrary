@@ -84,7 +84,7 @@ __enable_xml_failure()
 
 __initialize_xmlmgt()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( ${__REALPATH} "${__REALPATH_OPTS}" "$( \dirname '$0' )" )
 
   # Requires xmlstarlet to be available on the system
   __load __initialize_xmlmgt "${SLCF_SHELL_TOP}/lib/base_logging.sh"
@@ -1173,6 +1173,9 @@ then
   xml_exe=
 fi
 
+xmlstarlet_exe_found=0
+use_python_parser_for_xml=0
+
 \which 'xmlstarlet' >/dev/null 2>&1
 if [ $? -ne 0 ]
 then
@@ -1191,10 +1194,11 @@ else
   xmlstarlet_exe_found=1
 fi
 
-if [ "${use_python_parser_for_xml}" -eq 1 -o "${xmlstarlet_exe_found}" -eq 1 ]
+echo "Checking ---- ${use_python_parser_for_xml} ---- ${xmlstarlet_exe_found}" >> /tmp/.xyz
+if [ "${use_python_parser_for_xml}" -eq 1 ] || [ "${xmlstarlet_exe_found}" -eq 1 ]
 then
   type "__initialize" 2>/dev/null | \grep -q 'is a function'
-
+  
   # shellcheck source=/dev/null
   [ $? -ne 0 ] && . "${SLCF_SHELL_TOP}/lib/base_logging.sh"
 

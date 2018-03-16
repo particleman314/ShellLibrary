@@ -1,15 +1,14 @@
-#!/bin/sh
+#!//usr/bin/env bash
 
 ###############################################################################
-# Copyright (c) 2016 CA.  All rights reserved.
-# CA.
-# CA IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A
+# Copyright (c) 2017.  All rights reserved.
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR
-# STANDARD, CA IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION.
-# CA EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY
@@ -19,7 +18,7 @@
 if [ -z "${__YUM_INSTALLER}" ]
 then
   which yum >/dev/null 2>&1
-  [ $? -eq 0 ] && __YUM_INSTALLER=$( which 'yum' 2>/dev/null )
+  [ $? -eq 0 ] && __YUM_INSTALLER=$( \which 'yum' 2>/dev/null )
 
   if [ -n "${__YUM_INSTALLER}" ]
   then
@@ -65,7 +64,7 @@ download_package()
 
   [ -z "${webaddr}" ] && return "${NO_WEBARCHIVE}"
 
-  typeset wget_exe=$( which wget >/dev/null 2>&1 )
+  typeset wget_exe=$( \which wget >/dev/null 2>&1 )
   [ $? -ne 0 ] && return "${NO_WGET_EXECUTABLE}"
 
   wget --quiet --no-dns-cache $@ "${webaddr}"/"${rpmname}"

@@ -1,7 +1,6 @@
 ###############################################################################
 #
 # Author           : Mike Klusman
-# Company          : CA
 # Software Package : Shell Automated Testing -- BLAH
 # Application      : Support Functionality
 # Language         : Bourne Shell

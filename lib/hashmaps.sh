@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -29,6 +29,9 @@
 # Functions Supplied :
 #
 #    __access_data
+#    __decode_mapname
+#    __decode_mapitem
+#    __encode_mapitem
 #    __get_key_name
 #    __get_value_item_separator
 #    __set_value_item_separator
@@ -104,6 +107,35 @@ __access_data()
   return "${PASS}"
 }
 
+__decode_mapname()
+{
+  typeset input="$1"
+  [ -z "${input}" ] && return "${FAIL}"
+
+  printf "%s\n" "${input}" | \cut -f 1 -d '=' | \cut -f 2 -d ':' | \sed -e 's#keys$##'
+  return "${PASS}"
+}
+
+__decode_mapitem()
+{
+  typeset input="$1"
+  [ -z "${input}" ] && return "${FAIL}"
+
+  typeset decode_result="$( printf "%s\n" "${input}" | \cut -f 2 -d '=' | \sed -e 's#^"##' -e 's#"$##' -e "s#${__VALUE_ITEM_SEPARATOR}# #g" )"
+  printf "%s\n" "${decode_result}"
+  return "${PASS}"  
+}
+
+__encode_mapitem()
+{
+  typeset input="$@"
+  [ -z "${input}" ] && return "${FAIL}"
+
+  typeset encode_result="$( printf "%s\n" "${input}" | \sed -e "s# #${__VALUE_ITEM_SEPARATOR}#g" )"
+  printf "%s\n" "${encode_result}"
+  return "${PASS}"  
+}
+
 __get_key_name()
 {
   typeset mapname="$1"
@@ -122,7 +154,7 @@ __get_value_item_separator()
 
 __initialize_hashmaps()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink -f "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( ${__REALPATH} ${__REALPATH_OPTS} "$( \dirname '$0' )" )
 
   __load __initialize_base_logging "${SLCF_SHELL_TOP}/lib/base_logging.sh"
   __load __initialize_numerics "${SLCF_SHELL_TOP}/lib/numerics.sh"
@@ -157,7 +189,8 @@ haccess_keys_via_file()
 
   [ "$( is_empty --str "${filename}" )" -eq "${YES}" ] || [ ! -f "${filename}" ] && return "${FAIL}"
 
-  typeset keys="$( \grep "^KEYS" "${filename}" | \sed -e "s#^KEYS:\(\\w*\)keys=\"\(\\w*\)\"\$#\2#" -e "s#${__VALUE_ITEM_SEPARATOR}# #g" )"
+  typeset keys="$( \grep "^KEYS" "${filename}" )"
+  keys="$( __decode_mapitem "${keys}" )"
   [ -z "${keys}" ] && return "${FAIL}"
   
   printf "%s\n" "${keys}"
@@ -183,10 +216,12 @@ haccess_entry_via_file()
 
   [ "$( is_empty --str "${filename}" )" -eq "${YES}" ] || [ ! -f "${filename}" ] || [ "$( is_empty --str "${key}" )" -eq "${YES}" ] && return "${FAIL}"
 
-  typeset mapname="$( \grep "^KEYS" "${filename}" | \sed -e "s#^KEYS:\(\\w*\)keys=\"\(\\w*\)\"\$#\1#" )"
+  typeset mapname="$( \grep "^KEYS" "${filename}" )"
+  mapname=$( __decode_mapname "${mapname}" )
   [ -z "${mapname}" ] && return "${FAIL}"
   
-  typeset value="$( \grep "^ENTRY:${mapname}${key}=" "${filename}" | \sed -e "s#^ENTRY:${mapname}${key}=\"\(.*\)\"\$#\1#" -e "s#${__VALUE_ITEM_SEPARATOR}# #g" )"
+  typeset value="$( \grep "^ENTRY:${mapname}${key}=" "${filename}" )"
+  value="$( __decode_mapitem "${value}" )"
 
   [ -n "${value}" ] && printf "%s\n" "${value}"
   return "${PASS}"
@@ -224,30 +259,40 @@ hadd_entry_via_file()
 
   [ "$( is_empty --str "${key}" )" -eq "${YES}" ] && return "${FAIL}"
 
-  typeset mapname="$( \grep "^KEYS" "${filename}" | \sed -e "s#^KEYS:\(\\w*\)keys=\"\(\\w*\)\"\$#\1#" )"
+  typeset mapname="$( \grep "^KEYS" "${filename}" )"
+  mapname=$( __decode_mapname "${mapname}" )
   if [ -z "${mapname}" ]
   then
     mapname="${mapn}"
-    \sed "1i KEYS:${mapname}keys=\"\"" "${filename}" > "${filename}.tmp"
-    \mv -f "${filename}.tmp" "${filename}"
+    #printf "%s\n" "KEYS:${mapname}keys=\"${keys}\"" | \cat - "${filename}" > "${filename}.tmp"
+    #\mv -f "${filename}.tmp" "${filename}"
   fi    
   
+  #start_timer HCHANGE
+  #typeset line="$( \awk "/^ENTRY:${mapname}${key}=/{print}" "${filename}" )"
   typeset line="$( \grep "^ENTRY:${mapname}${key}=" "${filename}" )"
   typeset RC=$?
+  #echo "AAAA ${line} -- ${RC} -- ${mapname} --- ${key} --- ${value} -- ${filename}" >> /tmp/.xyz
+  #echo "Grep for pre-existing line --> $( end_timer HCHANGE )" >> /tmp/.xyz
+  #start_timer HCHANGE
   if [ "${RC}" -ne 0 ] || [ -z "${line}" ]
   then
     printf "%s\n" "ENTRY:${mapname}${key}=\"${value}\"" >> "${filename}"
-    typeset keys="$( \grep "^KEYS" "${filename}" | \sed -e "s#^KEYS:\\w*keys=\"\(\\w*\)\"\$#\1#")"
+    typeset keys="$( \grep "^KEYS" "${filename}" )"
+    keys=$( __decode_mapitem "${keys}" )
     if [ -z "${keys}" ]
     then
       keys="${key}"
-    else
-      keys+="${__VALUE_ITEM_SEPARATOR}${key}"
-      \sed '1d' "${filename}" >> "${filename}.tmp"
+      printf "%s\n" "KEYS:${mapname}keys=\"${keys}\"" | \cat - "${filename}" > "${filename}.tmp"
       \mv -f "${filename}.tmp" "${filename}"
+    else
+      keys="$( __encode_mapitem "${keys} ${key}" )"
+      \sed '1d' "${filename}" > "${filename}.tmp"
+      printf "%s\n" "KEYS:${mapname}keys=\"${keys}\"" | \cat - "${filename}.tmp" > "${filename}"
+      #\mv -f "${filename}.tmp" "${filename}"
     fi
-    \sed "1i KEYS:${mapname}keys=\"${keys}\"" "${filename}" > "${filename}.tmp"
-    \mv -f "${filename}.tmp" "${filename}"
+    #printf "%s\n" "KEYS:${mapname}keys=\"${keys}\"" | \cat - "${filename}" > "${filename}.tmp"
+    #\mv -f "${filename}.tmp" "${filename}"
     RC="${PASS}"
   else
     typeset extra_opts=
@@ -255,6 +300,7 @@ hadd_entry_via_file()
     hchange_entry_via_file --filename "${filename}" --key "${key}" --value "${value}" ${extra_opts}
     RC=$?
   fi
+  #echo "Writing/Replacing line in file --> $( end_timer HCHANGE )">> /tmp/.xyz
   return "${RC}" 
 }
 
@@ -379,19 +425,27 @@ hchange_entry_via_file()
   [ "$( is_empty --str "${filename}" )" -eq "${YES}" ] || [ ! -f "${filename}" ] && return "${FAIL}"
   [ "$( is_empty --str "${key}" )" -eq "${YES}" ] && [ "$( is_empty --str "${value}" )" -eq "${YES}" ] && return "${FAIL}"
 
-  typeset mapname="$( \grep "^KEYS" "${filename}" | \sed -e "s#^KEYS:\(\\w*\)keys=\"\(\\w*\)\"\$#\1#" )"
+  typeset mapname="$( \grep "^KEYS" "${filename}" )"
+  mapname=$( __decode_mapname "${mapname}" )
+  #typeset mapname="$( \grep "^KEYS" "${filename}" | \cut -f 1 -d '=' | \cut -f 2 -d ':' | \sed -e 's#keys$##' )" #\sed -e "s#^KEYS:\(\\w*\)keys=\"\(\\w*\)\"\$#\1#" )"
   [ -z "${mapname}" ] && return "${FAIL}"
   
   typeset line="$( \grep "^ENTRY:${mapname}${key}=" "${filename}" )"
-
   \grep -v "^ENTRY:${mapname}${key}=" "${filename}" >> "${filename}.tmp"
   if [ -n "${line}" ]
   then
+    typeset prefix="$( printf "%s\n" "${line}" | \cut -f 1 -d '=' )"
     if [ "${replace}" -eq "${YES}" ]
     then
-      printf "%s\n" "${line}" | \sed -e "s#^ENTRY:${mapname}${key}=\"\(.*\)\"\$#ENTRY:${mapname}${key}=\"${value}\"#" >> "${filename}.tmp"
+      printf "%s\n" "${prefix}=\"${value}\"" >> "${filename}.tmp"
     else
-      printf "%s\n" "${line}" | \sed -e "s#^ENTRY:${mapname}${key}=\"\(.*\)\"\$#ENTRY:${mapname}${key}=\"\1 ${value}\"#" >> "${filename}.tmp"
+      typeset oldvalue="$( printf "%s\n" "${line}" | \cut -f 2 -d '=' | \sed -e 's#^"##' -e 's#"$##' )"
+      if [ "$( is_empty --str "${oldvalue}" )" -eq "${YES}" ]
+      then
+        printf "%s\n" "${prefix}=\"${value}\"" >> "${filename}.tmp"
+      else
+        printf "%s\n" "${prefix}=\"${oldvalue} ${value}\"" >> "${filename}.tmp"
+      fi
     fi
   else
     printf "%s\n" "ENTRY:${mapname}${key}=\"${value}\"" >> "${filename}"
@@ -489,7 +543,9 @@ hcontains_entry_via_file()
     return "${NO}"
   fi
 
-  typeset mapname="$( \grep "^KEYS" "${filename}" | \sed -e "s#^KEYS:\(\\w*\)keys=\"\(\\w*\)\"\$#\1#" )"
+  typeset mapname="$( \grep "^KEYS" "${filename}" )"
+  mapname=$( __decode_mapname "${mapname}" )
+  #typeset mapname="$( \grep "^KEYS" "${filename}" | \cut -f 1 -d '=' | \cut -f 2 -d ':' | \sed -e 's#keys$##' )" #\sed -e "s#^KEYS:\(\\w*\)keys=\"\(\\w*\)\"\$#\1#" )"
   [ -z "${mapname}" ] && return "${FAIL}"
 
   \grep "^ENTRY:${mapname}${key}" "${filename}" | \grep -q "${match}"
@@ -882,7 +938,9 @@ hget_mapname()
   [ "$( is_empty --str "${allkeysline}" )" -eq "${YES}" ] && return "${FAIL}"
   
   typeset known_keys="$( printf "%s\n" "${allkeysline}" | \cut -f 2 -d '=' )"
-  typeset mapname="$( printf "%s\n" "${allkeysline}" | \cut -f 1 -d '=' | \sed -e 's#^KEYS:##' -e 's#keys$##' -e "s#${__VALUE_ITEM_SEPARATOR}# #g" )"
+  typeset mapname="$( printf "%s\n" "${allkeysline}" )"
+  mapname=$( __decode_mapname "${mapname}" )
+  #typeset mapname="$( printf "%s\n" "${allkeysline}" | \cut -f 1 -d '=' | \sed -e 's#^KEYS:##' -e 's#keys$##' -e "s#${__VALUE_ITEM_SEPARATOR}# #g" )"
   
   [ -n "${mapname}" ] && printf "%s\n" "${mapname}"
   return "${PASS}"
@@ -978,7 +1036,7 @@ hpersist()
   typeset allkeys="$( hkeys --map "${map}" )"
   [ "$( is_empty --str "${allkeys}" )" -eq "${YES}" ] && return "${FAIL}"
   
-  typeset reduced_allkeys="$( printf "%s\n" "${allkeys}" | \sed -e "s#[ \t]#${__VALUE_ITEM_SEPARATOR}#g" )"
+  typeset reduced_allkeys="$( printf "%s\n" "${allkeys}" | \sed -e "s#[ $( printf '\t' )]#${__VALUE_ITEM_SEPARATOR}#g" )"
   if [ "${rename}" -eq "${YES}" ]
   then
     print_plain --msg "KEYS:${new_map_name}keys=\"${reduced_allkeys}\"" > "${filename}"
@@ -989,7 +1047,7 @@ hpersist()
   typeset k=
   for k in ${allkeys}
   do
-    typeset v="$( hget --map "${map}" --key "${k}" | \sed -e "s#[ \t]#${__VALUE_ITEM_SEPARATOR}#g" )"
+    typeset v="$( hget --map "${map}" --key "${k}" | \sed -e "s#[ $( printf '\t' )]#${__VALUE_ITEM_SEPARATOR}#g" )"
     if [ "${rename}" -eq "${YES}" ]
     then
       print_plain --msg "ENTRY:${new_map_name}${k}=\"${v}\"" >> "${filename}"
@@ -1110,14 +1168,16 @@ hread_map()
   typeset filename=
   typeset mapname=
   typeset clobber="${NO}"
+  typeset getmapname="${NO}"
   
   OPTIND=1
-  while getoptex "f: filename: c clobber m: map:" "$@"
+  while getoptex "f: filename: c clobber m: map: getmapname" "$@"
   do
     case "${OPTOPT}" in
-    'f'|'filename' ) filename="${OPTARG}";;
-    'c'|'clobber'  ) clobber="${YES}";;
-    'm'|'map'      ) mapname="${OPTARG}";;
+    'f'|'filename'    ) filename="${OPTARG}";;
+    'c'|'clobber'     ) clobber="${YES}";;
+    'm'|'map'         ) mapname="${OPTARG}";;
+        'getmapname'  ) getmapname="${YES}";;
     esac
   done
   shift $(( OPTIND-1 ))
@@ -1131,7 +1191,8 @@ hread_map()
   [ "$( is_empty --str "${allkeysline}" )" -eq "${YES}" ] && return "${FAIL}"
   
   typeset known_keys="$( printf "%s\n" "${allkeysline}" | \cut -f 2 -d '=' )"
-  typeset map="$( printf "%s\n" "${allkeysline}" | \cut -f 1 -d '=' | \sed -e 's#^KEYS:##' -e 's#keys$##' -e "s#${__VALUE_ITEM_SEPARATOR}# #g" )"
+  typeset map="$( printf "%s\n" "${allkeysline}" )"
+  map="$( __decode_mapname "${map}" )"
   
   [ "$( is_empty --str "${map}" )" -eq "${YES}" ] && return "${FAIL}"
 
@@ -1159,6 +1220,7 @@ hread_map()
   done
 
   [ "${clobber}" -eq "${YES}" ] && \rm -f "${filename}"
+  [ "${getmapname}" -eq "${YES}" ] && printf "%s\n" "${mapname}"
   return "${PASS}"
 }
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 ###############################################################################
 # Copyright (c) 2016.  All rights reserved. 
-# MIKE KLUSMAN IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
+# Mike Klusman IS PROVIDING THIS DESIGN, CODE, OR INFORMATION "AS IS" AS A 
 # COURTESY TO YOU.  BY PROVIDING THIS DESIGN, CODE, OR INFORMATION AS 
 # ONE POSSIBLE IMPLEMENTATION OF THIS FEATURE, APPLICATION OR 
-# STANDARD, MIKE KLUSMAN IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
+# STANDARD, Mike Klusman IS MAKING NO REPRESENTATION THAT THIS IMPLEMENTATION 
 # IS FREE FROM ANY CLAIMS OF INFRINGEMENT, AND YOU ARE RESPONSIBLE 
 # FOR OBTAINING ANY RIGHTS YOU MAY REQUIRE FOR YOUR IMPLEMENTATION. 
-# MIKE KLUSMAN EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
+# Mike Klusman EXPRESSLY DISCLAIMS ANY WARRANTY WHATSOEVER WITH RESPECT TO 
 # THE ADEQUACY OF THE IMPLEMENTATION, INCLUDING BUT NOT LIMITED TO 
 # ANY WARRANTIES OR REPRESENTATIONS THAT THIS IMPLEMENTATION IS FREE 
 # FROM CLAIMS OF INFRINGEMENT, IMPLIED WARRANTIES OF MERCHANTABILITY 
@@ -36,6 +36,7 @@
 #    __record
 #    decode_remote_machinetype
 #    get_temp_dir
+#    is_mac_machine
 #    is_posix_machine
 #    is_windows_machine
 #    local_machinespecs
@@ -53,11 +54,11 @@ __add_support_binaries()
   ###
   typeset components="$( printf "%s\n" "${PATH}" | \sed -e "s#${SEPARATOR}# #g" )"
   typeset found_in_path="${NO}"
-  typeset sb_path="$( \readlinke "${SLCF_SHELL_TOP}/resources/$( __get_resource_subpath )" )"
-  typeset c
+  typeset sb_path="$( ${__REALPATH} ${__REALPATH_OPTS} "${SLCF_SHELL_TOP}/resources/$( __get_resource_subpath )" )"
+  typeset c=
   for c in ${components}
   do
-    typeset resolved=$( \readlink "${c}" )
+    typeset resolved=$( ${__REALPATH} ${__REALPATH_OPTS} "${c}" )
     if [ "${resolved}" == "${sb_path}" ]
     then
       found_in_path="${YES}"
@@ -112,7 +113,7 @@ __get_linux_variety()
   
   if [ "x${os_designation}" == "xlinux" ]
   then
-    typeset df
+    typeset df=
     for df in ${distribution_files}
     do
       [ ! -f "${df}" ] && continue
@@ -212,13 +213,14 @@ __get_resource_subpath()
   'aix'      ) printf "%s\n" 'Unix/AIX';;
   'hpux'     ) printf "%s\n" 'Unix/HPUX';;
   'windows'  ) printf "%s\n" 'Windows';;
+  'darwin'   ) printf "%s\n" 'MacOS';;
   esac
   return "${PASS}"
 }
 
 __initialize_base_machinemgt()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( ${__REALPATH} ${__REALPATH_OPTS} "$( \dirname '$0' )" )
   
   __load __initialize_hashmaps "${SLCF_SHELL_TOP}/lib/hashmaps.sh"
   
@@ -226,7 +228,7 @@ __initialize_base_machinemgt()
   __initialize "__initialize_base_machinemgt"
 }
 
-__output_match ()
+__output_match()
 {
   typeset input="$1"
   typeset nwords="${3:-0}"
@@ -351,13 +353,14 @@ get_temp_dir()
 
     hadd_item --map "${mapname}" --key "${mapkey}" --value "${envkeys}"
     hadd_item --map "${mapname}" --key 'defined' --value "${YES}"
+    hadd_item --map "${mapname}" --key 'reset' --value "${NO}"
   fi
 
   typeset possible_tmpdirs=$( hget --map "${mapname}" --key "${mapkey}" )
 
   if [ -n "${possible_tmpdirs}" ]
   then
-    typeset tmploop
+    typeset tmploop=
     for tmploop in ${possible_tmpdirs}
     do
       typeset pt=
@@ -366,6 +369,15 @@ get_temp_dir()
       if [ -d "${pt}" ]
       then
         print_plain --message "${pt}"
+        if [ "$( hget --map "${mapname}" --key 'reset' )" -eq "${NO}" ]
+        then
+          hadd_item --map "${mapname}" --key 'reset' --value "${YES}"
+          typeset rsttmp=
+          for rsttmp in ${possible_tmpdirs}
+          do
+            eval "${rsttmp}=\"${pt}\""
+          done
+        fi
         return "${PASS}"
       fi
     done
@@ -397,6 +409,20 @@ get_temp_dir()
   return "${PASS}"
 }
 
+is_mac_machine()
+{
+  __debug $@
+  
+  if [ "x${OSVARIETY}" == 'xdarwin' ]
+  then
+    print_yes
+  else
+    print_no
+  fi
+  
+  return "${PASS}"
+}
+
 is_posix_machine()
 {
   __debug $@
@@ -410,7 +436,6 @@ is_posix_machine()
   
   return "${PASS}"
 }
-
 
 is_windows_machine()
 {
@@ -454,8 +479,8 @@ local_machinespecs()
   then
     __record --data "#!${SHELL}" --file "${specfile}" --no-export --method w
 
-    typeset machine_type=$( \uname -a | \cut -f 1 -d ' ' )
-    typeset machine_size=$( \uname -m )
+    typeset machine_type="$( \uname -a | \cut -f 1 -d ' ' )"
+    typeset machine_size="$( \uname -m )"
 
     if [ "x${machine_type}" == "xCygwin" ]
     then
@@ -481,37 +506,42 @@ local_machinespecs()
 	    else
 	      __record --data "OSBITSIZE=32" --file "${specfile}"
 	    fi
-    elif [ "x${machine_type}" == 'xAIX' ]
-    then
-      __record --data "OSVARIETY=aix" --file "${specfile}"
-      __record --data "PATH_SEP=\"/\"" --file "${specfile}"
-      __record --data "OSBITSIZE=64" --file "${specfile}"
-    elif [ "x${machine_type}" == 'xSunOS' ]
-    then
-      __record --data "OSVARIETY=solaris" --file "${specfile}"
-      __record --data "PATH_SEP=\"/\"" --file "${specfile}"
-      __record --data "OSBITSIZE=64" --file "${specfile}"
-    elif [ "x${machine_type}" == 'xHP-UX' ]
-    then
-      __record --data "OSVARIETY=hp" --file "${specfile}"
-      __record --data "PATH_SEP=\"/\"" --file "${specfile}"
-      __record --data "OSBITSIZE=64" --file "${specfile}"
     else
-      __record --data "OSVARIETY=linux" --file "${specfile}"
-      __record --data "SEPARATOR=\":\"" --file "${specfile}"
-      __record --data "PATH_SEP=\"/\"" --file "${specfile}"
-
-      if [ "x${machine_size}" == "xx86_64" ]
+      if [ "x${machine_type}" == 'xAIX' ]
       then
-	    __record --data "OSBITSIZE=64" --file "${specfile}"
+        __record --data "OSVARIETY=aix" --file "${specfile}"
+        __record --data "PATH_SEP=\"/\"" --file "${specfile}"
+        __record --data "OSBITSIZE=64" --file "${specfile}"
+      elif [ "x${machine_type}" == 'xSunOS' ]
+      then
+        __record --data "OSVARIETY=solaris" --file "${specfile}"
+        __record --data "PATH_SEP=\"/\"" --file "${specfile}"
+        __record --data "OSBITSIZE=64" --file "${specfile}"
+      elif [ "x${machine_type}" == 'xHP-UX' ]
+      then
+        __record --data "OSVARIETY=hp" --file "${specfile}"
+        __record --data "PATH_SEP=\"/\"" --file "${specfile}"
+        __record --data "OSBITSIZE=64" --file "${specfile}"
+      elif [ "x${machine_type}" == 'xDarwin' ]
+      then
+        __record --data "OSVARIETY=darwin" --file "${specfile}"
+        __record --data "PATH_SEP=\"/\"" --file "${specfile}"
+        __record --data "OSBITSIZE=64" --file "${specfile}"
       else
-	    __record --data "OSBITSIZE=32" --file "${specfile}"
+        __record --data "OSVARIETY=linux" --file "${specfile}"
+        __record --data "PATH_SEP=\"/\"" --file "${specfile}"
+        if [ "x${machine_size}" == "xx86_64" ]
+        then
+	        __record --data "OSBITSIZE=64" --file "${specfile}"
+        else
+	        __record --data "OSBITSIZE=32" --file "${specfile}"
+        fi
       fi
-    fi    
+      __record --data "SEPARATOR=\":\"" --file "${specfile}"
+    fi 
   fi
   
-  typeset tmpdir
-  tmpdir=$( get_temp_dir )
+  typeset tmpdir="$( get_temp_dir )"
   __record --data "TEMPORARY_DIR=${tmpdir}" --file "${specfile}"
 
   # shellcheck source=/dev/null
