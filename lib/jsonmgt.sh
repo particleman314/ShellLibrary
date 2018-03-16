@@ -76,7 +76,7 @@ __initialize_jsonmgt()
   __initialize "__initialize_jsonmgt"
   
   ### Remove coloring and use raw output
-  __DEFAULT_JQ_OPTIONS='--compact-output --raw-output -e '
+  [ "${use_python_parser_for_json}" -ne "${YES}" ] && __DEFAULT_JQ_OPTIONS='--compact-output --raw-output -e '
   __JSON_TRACING_CHANNEL='JSON'
 }
 
