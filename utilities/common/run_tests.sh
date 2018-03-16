@@ -18,18 +18,15 @@
 ###
 ### Only run the tests in interactive mode (outside the harness)
 ###
-. "${SLCF_SHELL_FUNCTIONDIR}/${LIBRARY_FUNCTION_FILE}.sh"
+. "${SLCF_SHELL_TOP}/lib/${LIBRARY_FUNCTION_FILE}.sh"
 
 SUBSYSTEM_TEMPORARY_DIR='/tmp'
 export SUBSYSTEM_TEMPORARY_DIR;
 
 for __tf in $@
 do
-  if [ -f "${SLCF_SHELL_FUNCTIONDIR}/__setup_${LIBRARY_FUNCTION_FILE}.sh" ]
-  then
-    . "${SLCF_SHELL_FUNCTIONDIR}/__setup_${LIBRARY_FUNCTION_FILE}.sh"
-  fi
-    
+  [ -f "${SLCF_SHELL_TOP}/lib/__setup_${LIBRARY_FUNCTION_FILE}.sh" ] && . "${SLCF_SHELL_TOP}/lib/__setup_${LIBRARY_FUNCTION_FILE}.sh"
+
   if [ -f "${__tf}" ]
   then
     printf "\n%s\n\n" "Running test --> ${__tf}"
