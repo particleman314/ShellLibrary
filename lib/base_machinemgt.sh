@@ -225,7 +225,7 @@ __initialize_base_machinemgt()
   __load __initialize_hashmaps "${SLCF_SHELL_TOP}/lib/hashmaps.sh"
   
   __ensure_local_machine_identified
-  __initialize "__initialize_base_machinemgt"
+  __initialize '__initialize_base_machinemgt'
 }
 
 __output_match()
@@ -261,7 +261,7 @@ __output_match()
 
 __prepared_base_machinemgt()
 {
-  __prepared "__prepared_base_machinemgt"
+  __prepared '__prepared_base_machinemgt'
 }
 
 __record()

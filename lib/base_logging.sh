@@ -148,14 +148,38 @@ __get_repeat_char()
 
 __initialize_base_logging()
 {
-  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( \readlink "$( \dirname '$0' )" )
+  [ -z "${SLCF_SHELL_TOP}" ] && SLCF_SHELL_TOP=$( ${__REALPATH} ${__REALPATH_OPTS} "$( \dirname '$0' )" )
   
   __load __initialize_timemgt "${SLCF_SHELL_TOP}/lib/timemgt.sh"
   
-  typeset today=$( __today_as_seconds )
-  [ -n "${__START_TIME}" ] && today="${__START_TIME}"
-  
-  [ -z "${__FILEMGRFILE}" ] && __FILEMGRFILE=$( \mktemp -t "$( get_user_id )_${today}_filemgrfile.${__TEMP_PATTERN}" )
+  typeset today=
+  if [ -n "${__START_TIME}" ]
+  then
+    today="${__START_TIME}"
+  else
+    today=$( __today_as_seconds )
+  fi
+
+  if [ -z "${__FILEMGRFILE}" ]
+  then
+    typeset possible_tmpdirs='TEMPORARY_DIR TEMP TMP TEMPDIR TMPDIR'  # THIS IS A HACK FOR FREEBSD/OPENBSD 'mktemp'
+    typeset SUBSFILEMGRFILE="$( \mktemp "$( get_user_id )_${today}_filemgrfile.${__TEMP_PATTERN}" )"
+    typeset ptd=
+    typeset pt=
+    for ptd in ${possible_tmpdirs}
+    do
+      eval "pt=\${${ptd}}"
+      if [ -d "${pt}" ]
+      then
+        case ${pt} in
+          *[!/]*/) pt=${pt%"${pt##*[!/]}"};;
+        esac
+        __FILEMGRFILE="${pt}/${SUBSFILEMGRFILE}"
+        \mv -f "${SUBSFILEMGRFILE}" "${__FILEMGRFILE}"
+        break
+      fi
+    done
+  fi
   __CURRENT_FILE=
 
   add_trap_callback __cleanup_filemgr EXIT
@@ -164,12 +188,12 @@ __initialize_base_logging()
   typeset RC=$?
   [ "${RC}" -eq "${PASS}" ] && COLUMNS=$( \tput cols ) || COLUMNS=80
 
-  __initialize "__initialize_base_logging"
+  __initialize '__initialize_base_logging'
 }
 
 __prepared_base_logging()
 {
-  __prepared "__prepared_base_logging"
+  __prepared '__prepared_base_logging'
 }
 
 __set_repeat_char()

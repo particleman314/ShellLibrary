@@ -1594,9 +1594,10 @@ print_btf_detail()
   typeset addendum="${NO}"
   typeset stderr="${NO}"
   typeset clear_line="${NO}"
+  typeset use_color=
   typeset empty_line="                                                                                "
   
-  typeset prefix
+  typeset prefix=
   typeset varval="$( __extract_value 'DETAIL_PREFIX' )"
   
   [ -n "${varval}" ] && eval "prefix='${varval}' " || eval "prefix=\"\$( __extract_value 'DEFAULT_DETAIL_PREFIX' )\" "
@@ -1604,7 +1605,7 @@ print_btf_detail()
   typeset remove_prefix="${NO}"
 
   OPTIND=1
-  while getoptex "no-newline m: msg: message: t: tab-level: newline-count: append p: prefix: no-prefix clear-line" "$@"
+  while getoptex "no-newline m: msg: message: t: tab-level: newline-count: append p: prefix: no-prefix clear-line use-color:" "$@"
   do
     case "${OPTOPT}" in
     'm'|'msg'|'message'  ) msg="${OPTARG}";;
@@ -1617,6 +1618,7 @@ print_btf_detail()
     'p'|'prefix'         ) prefix="${OPTARG} ";;
         'no-prefix'      ) remove_prefix="${YES}";;
         'clear-line'     ) clear_line="${YES}"; addendum="${NO}";;
+        'use-color'      ) use_color="${OPTARG}";;
     esac
   done
   shift $(( OPTIND-1 ))
@@ -1643,18 +1645,21 @@ print_btf_detail()
       cnt=$(( cnt + 1 ))
     done
   fi
-    
+
+  typeset reset_color=
+  [ -n "${use_color}" ] && reset_color="\033[0;37;00m"
+
   [ "${clear_line}" -eq "${YES}" ] && printf "%s\r" "${empty_line}"
   if [ -n "${varval}" ]
   then
     if [ "${addendum}" -eq "${NO}" ]
     then
-      printf "%s${newline}" "${prefix}${tab_level}${msg}" | \sed -e "s#${varval}#    #g"
+      printf "${use_color}%s${reset_color}${newline}" "${prefix}${tab_level}${msg}" | \sed -e "s#${varval}#    #g"
     else
-      printf "%s${newline}" "${msg}" | \sed -e "s#${varval}#    #g"
+      printf "${use_color}%s${reset_color}${newline}" "${msg}" | \sed -e "s#${varval}#    #g"
     fi
   else
-    printf "%s${newline}" "${prefix}${tab_level}${msg}"
+    printf "${use_color}%s${reset_color}${newline}" "${prefix}${tab_level}${msg}"
   fi
   return "${PASS}"
 }
