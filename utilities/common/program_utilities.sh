@@ -457,7 +457,8 @@ __extract_value()
   typeset key="$1"
   typeset specialized_variable_prefix="$2"
   [ -z "${specialized_variable_prefix}" ] && specialized_variable_prefix="${__PROGRAM_VARIABLE_PREFIX}"
-  
+  [ -z "${specialized_variable_prefix}" ] && return "${FAIL}"
+
   typeset varname="$( __define_internal_variable "${key}" "${specialized_variable_prefix}" )"
   if [ $? -eq 0 ] || [ -z "${varname}" ]
   then
@@ -738,8 +739,9 @@ __make_tab_level()
   [ "${level}" -eq 0 ] && return "${PASS}"
   
   typeset varval=$( __extract_value 'DISPLAY_TAB_MARKER' )
-  
-  level=$( printf '%*s' "${level}" | \tr ' ' "|" | \sed -e "s#|#${varname}#g" )
+  [ -z "${varval}" ] && varval=$'\t'
+
+  level=$( printf '%*s' "${level}" | \tr ' ' "|" | \sed -e "s#|#${varval}#g" )
   printf "%s\n" "${level}"
   return "${PASS}"
 }
@@ -1606,7 +1608,9 @@ print_btf_detail()
   do
     case "${OPTOPT}" in
     'm'|'msg'|'message'  ) msg="${OPTARG}";;
-    't'|'tab-level'      ) tab_level="${OPTARG}";;
+    't'|'tab-level'      ) tab_level="${OPTARG}";
+                           [ -z "$( __extract_value 'DISPLAY_TAB_MARKER' )" ] && varval=$'\t'
+                           ;;
         'no-newline'     ) newline="${NO}";;
         'newline-count'  ) newline_cnt="${OPTARG}";;
         'append'         ) addendum="${YES}"; clear_line="${NO}";;
@@ -1639,15 +1643,18 @@ print_btf_detail()
       cnt=$(( cnt + 1 ))
     done
   fi
-  
-  varval="$( __extract_value 'DISPLAY_TAB_MARKER' )"
-  
+    
   [ "${clear_line}" -eq "${YES}" ] && printf "%s\r" "${empty_line}"
-  if [ "${addendum}" -eq "${NO}" ]
+  if [ -n "${varval}" ]
   then
-    printf "%s${newline}" "${tab_level}${prefix}${msg}" | \sed -e "s#${varval}#    #g"
+    if [ "${addendum}" -eq "${NO}" ]
+    then
+      printf "%s${newline}" "${prefix}${tab_level}${msg}" | \sed -e "s#${varval}#    #g"
+    else
+      printf "%s${newline}" "${msg}" | \sed -e "s#${varval}#    #g"
+    fi
   else
-    printf "%s${newline}" "${msg}" | \sed -e "s#${varval}#    #g"
+    printf "%s${newline}" "${prefix}${tab_level}${msg}"
   fi
   return "${PASS}"
 }
